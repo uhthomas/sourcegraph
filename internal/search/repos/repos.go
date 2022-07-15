@@ -592,7 +592,13 @@ func (r *Resolver) dependencies(ctx context.Context, op *search.RepoOptions) (_ 
 		return nil, nil, nil, errors.Errorf("support for `repo:dependencies()` is disabled in site config (`experimentalFeatures.dependenciesSearch`)")
 	}
 
-	repoRevs, err := listDependencyRepos(ctx, r.db.Repos(), op.Dependencies, op.CaseSensitiveRepoFilters)
+	var repoRevParams []string
+	for _, pred := range op.Dependencies {
+		fmt.Printf("pred=%+v\n", pred)
+		repoRevParams = append(repoRevParams, pred.RepoRev)
+	}
+
+	repoRevs, err := listDependencyRepos(ctx, r.db.Repos(), repoRevParams, op.CaseSensitiveRepoFilters)
 	if err != nil {
 		return nil, nil, nil, err
 	}
