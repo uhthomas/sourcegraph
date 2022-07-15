@@ -41,7 +41,7 @@ func newExternalHTTPHandler(
 	rateLimitWatcher graphqlbackend.LimitWatcher,
 	handlers *internalhttpapi.Handlers,
 	newExecutorProxyHandler enterprise.NewExecutorProxyHandler,
-	newGitHubAppCloudSetupHandler enterprise.NewGitHubAppCloudSetupHandler,
+	newGitHubAppSetupHandler enterprise.NewGitHubAppSetupHandler,
 ) http.Handler {
 	// Each auth middleware determines on a per-request basis whether it should be enabled (if not, it
 	// immediately delegates the request to the next middleware in the chain).
@@ -69,10 +69,10 @@ func newExternalHTTPHandler(
 	// 🚨 SECURITY: This handler implements its own token auth inside enterprise
 	executorProxyHandler := newExecutorProxyHandler()
 
-	githubAppCloudSetupHandler := newGitHubAppCloudSetupHandler()
+	githubAppSetupHandler := newGitHubAppSetupHandler()
 
 	// App handler (HTML pages), the call order of middleware is LIFO.
-	appHandler := app.NewHandler(db, githubAppCloudSetupHandler)
+	appHandler := app.NewHandler(db, githubAppSetupHandler)
 	if hooks.PostAuthMiddleware != nil {
 		// 🚨 SECURITY: These all run after the auth handler so the client is authenticated.
 		appHandler = hooks.PostAuthMiddleware(appHandler)

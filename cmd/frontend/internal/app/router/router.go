@@ -39,6 +39,7 @@ const (
 	LatestPing = "pings.latest"
 
 	SetupGitHubAppCloud = "setup.github.app.cloud"
+	SetupGitHubApp      = "setup.github.app"
 
 	OldToolsRedirect = "old-tools-redirect"
 	OldTreeRedirect  = "old-tree-redirect"
@@ -99,6 +100,7 @@ func newRouter() *mux.Router {
 	base.Path("/site-admin/pings/latest").Methods("GET").Name(LatestPing)
 
 	base.Path("/setup/github/app/cloud").Methods("GET").Name(SetupGitHubAppCloud)
+	base.Path("/setup/github/app").Methods("GET").Name(SetupGitHubApp)
 
 	repoPath := `/` + routevar.Repo
 	repo := base.PathPrefix(repoPath + "/" + routevar.RepoPathDelim + "/").Subrouter()

@@ -545,10 +545,10 @@ func (e ErrRateLimitUnsupported) Error() string {
 }
 
 const (
-	URNGitHubAppCloud = "GitHubAppCloud"
-	URNGitHubOAuth    = "GitHubOAuth"
-	URNGitLabOAuth    = "GitLabOAuth"
-	URNCodeIntel      = "CodeIntel"
+	URNGitHubApp   = "GitHubApp"
+	URNGitHubOAuth = "GitHubOAuth"
+	URNGitLabOAuth = "GitLabOAuth"
+	URNCodeIntel   = "CodeIntel"
 )
 
 // URN returns a unique resource identifier of an external service by given kind and ID.
