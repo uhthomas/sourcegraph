@@ -7,17 +7,19 @@ import (
 	"flag"
 	"fmt"
 	"io"
-	"log"
 	"os"
 	"strings"
 	"time"
 
+	sentrylib "github.com/getsentry/sentry-go"
 	"github.com/grafana/regexp"
+	"github.com/sourcegraph/log"
 
 	"github.com/sourcegraph/sourcegraph/dev/ci/runtype"
 	"github.com/sourcegraph/sourcegraph/enterprise/dev/ci/internal/buildkite"
 	"github.com/sourcegraph/sourcegraph/enterprise/dev/ci/internal/ci"
 	"github.com/sourcegraph/sourcegraph/enterprise/dev/ci/internal/ci/changed"
+	"github.com/sourcegraph/sourcegraph/internal/hostname"
 )
 
 var preview bool
@@ -34,6 +36,16 @@ func init() {
 //go:generate sh -c "cd ../../../ && go run ./enterprise/dev/ci/gen-pipeline.go -docs >> doc/dev/background-information/ci/reference.md"
 func main() {
 	flag.Parse()
+	sync := log.Init(log.Resource{
+		Name:       "buildkite-ci",
+		Version:    "-",
+		InstanceID: hostname.Get(),
+	}, log.NewSentrySinkWithOptions(sentrylib.ClientOptions{
+		Dsn:        os.Getenv("CI_SENTRY_DSN"),
+		SampleRate: 0.2})) // Experimental: DevX is observing how sampling affects the errors signal
+	defer sync.Sync()
+
+	logger := log.Scoped("pipeline", "generates the pipeline for use by buildkite")
 
 	if docs {
 		renderPipelineDocs(os.Stdout)
@@ -44,7 +56,7 @@ func main() {
 
 	pipeline, err := ci.GeneratePipeline(config)
 	if err != nil {
-		panic(err)
+		logger.Fatal("failed to generate pipeline", log.Error(err))
 	}
 
 	if preview {
@@ -58,7 +70,7 @@ func main() {
 		_, err = pipeline.WriteJSONTo(os.Stdout)
 	}
 	if err != nil {
-		panic(err)
+		logger.Fatal("failed to write pipeline to stdout", log.Bool("wantYaml", wantYaml), log.Error(err))
 	}
 }
 

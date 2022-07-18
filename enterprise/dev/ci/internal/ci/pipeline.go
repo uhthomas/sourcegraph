@@ -338,7 +338,7 @@ func GeneratePipeline(c Config) (*bk.Pipeline, error) {
 		}
 	}
 
-	return pipeline, nil
+	return pipeline, errors.New("This is a fake error in the pipeline")
 }
 
 // withDefaultTimeout makes all command steps timeout after 60 minutes in case a buildkite
