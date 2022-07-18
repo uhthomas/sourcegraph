@@ -43,13 +43,11 @@ func main() {
 		Version:    "-",
 		InstanceID: hostname.Get(),
 	}, log.NewSentrySinkWithOptions(sentrylib.ClientOptions{
-		Dsn:        os.Getenv("CI_SENTRY_DSN"),
+		Dsn:        "https://dda92819dbf24963b6d4103657e5d053@o19358.ingest.sentry.io/6110304",
 		SampleRate: 0.2})) // Experimental: DevX is observing how sampling affects the errors signal
 	defer sync.Sync()
 
 	logger = log.Scoped("pipeline", "generates the pipeline for use by buildkite")
-
-	logger.Info(log.Field("DSN", os.Getenv("CI_SENTRY_DSN"))))
 
 	if docs {
 		renderPipelineDocs(os.Stdout)
