@@ -1630,6 +1630,11 @@ func (r *Resolver) CreateBatchSpecFromRaw(ctx context.Context, args *graphqlback
 		return nil, err
 	}
 
+	bid, err := unmarshalBatchChangeID(args.BatchChangeID)
+	if err != nil {
+		return nil, err
+	}
+
 	batchSpec, err := svc.CreateBatchSpecFromRaw(ctx, service.CreateBatchSpecFromRawOpts{
 		NamespaceUserID:  uid,
 		NamespaceOrgID:   oid,
@@ -1637,6 +1642,7 @@ func (r *Resolver) CreateBatchSpecFromRaw(ctx context.Context, args *graphqlback
 		AllowIgnored:     args.AllowIgnored,
 		AllowUnsupported: args.AllowUnsupported,
 		NoCache:          args.NoCache,
+		BatchChangeID:    bid,
 	})
 	if err != nil {
 		return nil, err
