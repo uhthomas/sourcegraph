@@ -26,6 +26,8 @@ var preview bool
 var wantYaml bool
 var docs bool
 
+var logger log.Logger
+
 func init() {
 	flag.BoolVar(&preview, "preview", false, "Preview the pipeline steps")
 	flag.BoolVar(&wantYaml, "yaml", false, "Use YAML instead of JSON")
@@ -45,7 +47,7 @@ func main() {
 		SampleRate: 0.2})) // Experimental: DevX is observing how sampling affects the errors signal
 	defer sync.Sync()
 
-	logger := log.Scoped("pipeline", "generates the pipeline for use by buildkite")
+	logger = log.Scoped("pipeline", "generates the pipeline for use by buildkite")
 
 	if docs {
 		renderPipelineDocs(os.Stdout)
@@ -129,7 +131,7 @@ func renderPipelineDocs(w io.Writer) {
 			Diff:    diff,
 		})
 		if err != nil {
-			log.Fatalf("Generating pipeline for diff %q: %s", diff, err)
+			logger.Fatal("Generating pipeline for diff", log.Uint32("diff", uint32(diff)), log.Error(err))
 		}
 		fmt.Fprintf(w, "\n- Pipeline for `%s` changes:\n", diff)
 		for _, raw := range pipeline.Steps {
@@ -200,7 +202,7 @@ func renderPipelineDocs(w io.Writer) {
 					Diff: changed.None,
 				})
 				if err != nil {
-					log.Fatalf("Generating pipeline for RunType %q: %s", rt.String(), err)
+					logger.Fatal("Generating pipeline for RunType", log.String("runType", rt.String()), log.Error(err))
 				}
 				fmt.Fprint(w, "\nBase pipeline (more steps might be included based on branch changes):\n\n")
 				for _, raw := range pipeline.Steps {
