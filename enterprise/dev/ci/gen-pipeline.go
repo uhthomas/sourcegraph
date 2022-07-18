@@ -49,6 +49,8 @@ func main() {
 
 	logger = log.Scoped("pipeline", "generates the pipeline for use by buildkite")
 
+	logger.Info(log.Field("DSN", os.Getenv("CI_SENTRY_DSN"))))
+
 	if docs {
 		renderPipelineDocs(os.Stdout)
 		return
