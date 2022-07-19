@@ -58,7 +58,9 @@ func main() {
 
 	pipeline, err := ci.GeneratePipeline(config)
 	if err != nil {
-		logger.Fatal("failed to generate pipeline", log.Error(err))
+		logger.Error("failed to generate pipeline", log.Error(err))
+		time.Sleep(2 * time.Second)
+		os.Exit(1)
 	}
 
 	if preview {
@@ -72,7 +74,9 @@ func main() {
 		_, err = pipeline.WriteJSONTo(os.Stdout)
 	}
 	if err != nil {
-		logger.Fatal("failed to write pipeline to stdout", log.Bool("wantYaml", wantYaml), log.Error(err))
+		logger.Error("failed to write pipeline to stdout", log.Bool("wantYaml", wantYaml), log.Error(err))
+		time.Sleep(2 * time.Second)
+		os.Exit(1)
 	}
 }
 
