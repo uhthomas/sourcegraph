@@ -3,13 +3,30 @@ package command
 import (
 	"context"
 	"fmt"
+	"net"
 	"sort"
-	"strconv"
 	"strings"
 	"sync"
 	"time"
 
 	"github.com/inconshreveable/log15"
+	"golang.org/x/crypto/ssh"
+	"k8s.io/apimachinery/pkg/util/sets"
+
+	"github.com/weaveworks/ignite/cmd/ignite/run"
+	"github.com/weaveworks/ignite/pkg/apis/ignite"
+	"github.com/weaveworks/ignite/pkg/apis/ignite/validation"
+	meta "github.com/weaveworks/ignite/pkg/apis/meta/v1alpha1"
+	"github.com/weaveworks/ignite/pkg/config"
+	"github.com/weaveworks/ignite/pkg/constants"
+	igniteNetwork "github.com/weaveworks/ignite/pkg/network"
+	"github.com/weaveworks/ignite/pkg/operations"
+	"github.com/weaveworks/ignite/pkg/preflight/checkers"
+	"github.com/weaveworks/ignite/pkg/providers"
+	"github.com/weaveworks/ignite/pkg/providers/client"
+	"github.com/weaveworks/ignite/pkg/providers/manifeststorage"
+	"github.com/weaveworks/ignite/pkg/providers/storage"
+	igniteRuntime "github.com/weaveworks/ignite/pkg/runtime"
 
 	"github.com/sourcegraph/sourcegraph/internal/lazyregexp"
 	"github.com/sourcegraph/sourcegraph/lib/errors"
@@ -20,6 +37,8 @@ type commandRunner interface {
 }
 
 const firecrackerContainerDir = "/work"
+
+var igniteProviderSync sync.Once
 
 // formatFirecrackerCommand constructs the command to run on the host via a Firecracker
 // virtual machine in order to invoke the given spec. If the spec specifies an image, then
@@ -53,34 +72,121 @@ func formatFirecrackerCommand(spec CommandSpec, name string, options Options) co
 // setupFirecracker invokes a set of commands to provision and prepare a Firecracker virtual
 // machine instance. If a startup script path (an executable file on the host) is supplied,
 // it will be mounted into the new virtual machine instance and executed.
-func setupFirecracker(ctx context.Context, runner commandRunner, logger Logger, name, repoDir string, options Options, operations *Operations) error {
+func setupFirecracker(ctx context.Context, runner commandRunner, logger Logger, name, repoDir string, options Options, op *Operations) error {
 	// Start the VM and wait for the SSH server to become available
-	startCommand := command{
+	_ = command{
 		Key: "setup.firecracker.start",
 		Command: flatten(
 			"ignite", "run",
 			"--runtime", "docker",
 			"--network-plugin", "cni",
-			firecrackerResourceFlags(options.ResourceOptions),
+			// firecrackerResourceFlags(options.ResourceOptions),
 			firecrackerCopyfileFlags(repoDir, options.FirecrackerOptions.VMStartupScriptPath),
 			"--ssh",
 			"--name", name,
 			sanitizeImage(options.FirecrackerOptions.Image),
 		),
-		Operation: operations.SetupFirecrackerStart,
+		Operation: op.SetupFirecrackerStart,
 	}
 
-	if err := callWithInstrumentedLock(operations, logger, func() error { return runner.RunCommand(ctx, startCommand, logger) }); err != nil {
+	igniteProviderSync.Do(func() {
+		if err := manifeststorage.SetManifestStorage(); err != nil {
+			panic(fmt.Sprintf("failed to set ignite manifest storage: %v", err))
+		}
+		if err := storage.SetGenericStorage(); err != nil {
+			panic(fmt.Sprintf("failed to set generic ignite storage: %v", err))
+		}
+		if err := client.SetClient(); err != nil {
+			panic(fmt.Sprintf("failed to set ignite client: %v", err))
+		}
+		if err := config.SetAndPopulateProviders(igniteRuntime.RuntimeDocker, igniteNetwork.PluginCNI); err != nil {
+			panic(fmt.Sprintf("failed to populate ignite providers: %v", err))
+		}
+	})
+
+	if err := callWithInstrumentedLock(op, logger, func() error {
+		baseVM := providers.Client.VMs().New()
+
+		baseVM.Name = name
+
+		baseVM.Status.Runtime.Name = igniteRuntime.RuntimeDocker
+		baseVM.Status.Network.Plugin = igniteNetwork.PluginCNI
+
+		ociRef, err := meta.NewOCIImageRef(sanitizeImage(options.FirecrackerOptions.Image))
+		if err != nil {
+			return errors.Wrap(err, "failed to create OCI image ref")
+		}
+		baseVM.Spec.Image.OCI = ociRef
+		baseVM.Spec.CPUs = uint64(options.ResourceOptions.NumCPUs)
+		baseVM.Spec.Memory, _ = meta.NewSizeFromString(options.ResourceOptions.Memory)
+		baseVM.Spec.DiskSize, _ = meta.NewSizeFromString(options.ResourceOptions.DiskSpace)
+
+		if repoDir != "" {
+			baseVM.Spec.CopyFiles = append(baseVM.Spec.CopyFiles, ignite.FileMapping{
+				HostPath: repoDir,
+				VMPath:   firecrackerContainerDir,
+			})
+		}
+		if options.FirecrackerOptions.VMStartupScriptPath != "" {
+			baseVM.Spec.CopyFiles = append(baseVM.Spec.CopyFiles, ignite.FileMapping{
+				HostPath: options.FirecrackerOptions.VMStartupScriptPath,
+				VMPath:   options.FirecrackerOptions.VMStartupScriptPath,
+			})
+		}
+
+		baseVM.Spec.SSH = &ignite.SSH{Generate: true}
+
+		if err := validation.ValidateVM(baseVM).ToAggregate(); err != nil {
+			return errors.Wrap(err, "build invalid ignite vm")
+		}
+
+		createOpts := &run.CreateOptions{CreateFlags: &run.CreateFlags{
+			CopyFiles:   firecrackerCopyfileFlags(repoDir, options.FirecrackerOptions.VMStartupScriptPath),
+			SSH:         ignite.SSH{Generate: true},
+			VM:          baseVM,
+			RequireName: true,
+		}}
+
+		img, err := operations.FindOrImportImage(providers.Client, baseVM.Spec.Image.OCI)
+		if err != nil {
+			return errors.Wrap(err, "failed to import OCI image")
+		}
+		baseVM.SetImage(img)
+
+		kernel, err := operations.FindOrImportKernel(providers.Client, baseVM.Spec.Kernel.OCI)
+		if err != nil {
+			return errors.Wrap(err, "failed to import kernel")
+		}
+		baseVM.SetKernel(kernel)
+
+		if err := run.Create(createOpts); err != nil {
+			return errors.Wrap(err, "failed to create vm")
+		}
+
+		if err := checkers.StartCmdChecks(baseVM, sets.String{}); err != nil {
+			return errors.Wrap(err, "failed pre-start checks")
+		}
+
+		if err := operations.StartVM(baseVM, false); err != nil {
+			return errors.Wrap(err, "failed to start ignite vm")
+		}
+
+		return waitForSSH(baseVM, constants.SSH_DEFAULT_TIMEOUT_SECONDS, constants.IGNITE_SPAWN_TIMEOUT)
+	}); err != nil {
 		return errors.Wrap(err, "failed to start firecracker vm")
 	}
 
 	if options.FirecrackerOptions.VMStartupScriptPath != "" {
-		startupScriptCommand := command{
+		_ = command{
 			Key:       "setup.startup-script",
 			Command:   flatten("ignite", "exec", name, "--", options.FirecrackerOptions.VMStartupScriptPath),
-			Operation: operations.SetupStartupScript,
+			Operation: op.SetupStartupScript,
 		}
-		if err := runner.RunCommand(ctx, startupScriptCommand, logger); err != nil {
+		execOpts, err := (&run.ExecFlags{}).NewExecOptions(name, options.FirecrackerOptions.VMStartupScriptPath)
+		if err != nil {
+			return errors.Wrap(err, "failed to create exec options")
+		}
+		if err := run.Exec(execOpts); err != nil {
 			return errors.Wrap(err, "failed to run startup script")
 		}
 	}
@@ -122,6 +228,67 @@ func callWithInstrumentedLock(operations *Operations, logger Logger, f func() er
 	return err
 }
 
+func dialSuccess(vm *ignite.VM, seconds int) error {
+	addr := vm.Status.Network.IPAddresses[0].String() + ":22"
+	const perSecond = 10
+	delay := time.Second / time.Duration(perSecond)
+	var err error
+	for i := 0; i < seconds*perSecond; i++ {
+		conn, dialErr := net.DialTimeout("tcp", addr, delay)
+		if conn != nil {
+			conn.Close()
+			err = nil
+			break
+		}
+		err = dialErr
+		time.Sleep(delay)
+	}
+	if err != nil {
+		if err, ok := err.(*net.OpError); ok && err.Timeout() {
+			return errors.Newf("tried connecting to SSH but timed out %s", err)
+		}
+		return err
+	}
+
+	return nil
+}
+
+func waitForSSH(vm *ignite.VM, dialSeconds int, sshTimeout time.Duration) error {
+	if err := dialSuccess(vm, dialSeconds); err != nil {
+		return err
+	}
+
+	certCheck := &ssh.CertChecker{
+		IsHostAuthority: func(auth ssh.PublicKey, address string) bool {
+			return true
+		},
+		IsRevoked: func(cert *ssh.Certificate) bool {
+			return false
+		},
+		HostKeyFallback: func(hostname string, remote net.Addr, key ssh.PublicKey) error {
+			return nil
+		},
+	}
+
+	config := &ssh.ClientConfig{
+		HostKeyCallback: certCheck.CheckHostKey,
+		Timeout:         sshTimeout,
+	}
+
+	addr := vm.Status.Network.IPAddresses[0].String() + ":22"
+	sshConn, err := ssh.Dial("tcp", addr, config)
+	if err != nil {
+		if strings.Contains(err.Error(), "unable to authenticate") {
+			// we connected to the ssh server and recieved the expected failure
+			return nil
+		}
+		return err
+	}
+
+	defer sshConn.Close()
+	return errors.New("connected successfully with no authentication, failure was expected")
+}
+
 // teardownFirecracker issues a stop and a remove request for the Firecracker VM with
 // the given name.
 func teardownFirecracker(ctx context.Context, runner commandRunner, logger Logger, name string, operations *Operations) error {
@@ -135,14 +302,6 @@ func teardownFirecracker(ctx context.Context, runner commandRunner, logger Logge
 	}
 
 	return nil
-}
-
-func firecrackerResourceFlags(options ResourceOptions) []string {
-	return []string{
-		"--cpus", strconv.Itoa(options.NumCPUs),
-		"--memory", options.Memory,
-		"--size", options.DiskSpace,
-	}
 }
 
 func firecrackerCopyfileFlags(dir, vmStartupScriptPath string) []string {

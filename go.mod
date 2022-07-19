@@ -197,11 +197,50 @@ require (
 	sigs.k8s.io/yaml v1.3.0
 )
 
-require go.opentelemetry.io/contrib/propagators/jaeger v1.7.0
+require (
+	github.com/weaveworks/ignite v0.10.0
+	go.opentelemetry.io/contrib/propagators/jaeger v1.7.0
+)
 
 require (
+	github.com/Microsoft/hcsshim v0.8.23 // indirect
+	github.com/alessio/shellescape v1.2.2 // indirect
+	github.com/c2h5oh/datasize v0.0.0-20200112174442-28bbd4740fee // indirect
+	github.com/containerd/cgroups v1.0.1 // indirect
+	github.com/containerd/console v1.0.2 // indirect
+	github.com/containerd/containerd v1.5.8 // indirect
+	github.com/containerd/continuity v0.1.0 // indirect
+	github.com/containerd/fifo v1.0.0 // indirect
+	github.com/containerd/go-cni v1.0.2 // indirect
+	github.com/containerd/go-runc v1.0.0 // indirect
+	github.com/containerd/ttrpc v1.1.0 // indirect
+	github.com/containernetworking/cni v0.8.1 // indirect
+	github.com/containernetworking/plugins v0.9.1 // indirect
+	github.com/containers/image v3.0.2+incompatible // indirect
+	github.com/coreos/go-iptables v0.5.0 // indirect
+	github.com/docker/cli v20.10.7+incompatible // indirect
+	github.com/docker/distribution v2.7.1+incompatible // indirect
+	github.com/docker/go-events v0.0.0-20190806004212-e31b211e4f1c // indirect
+	github.com/freddierice/go-losetup v0.0.0-20170407175016-fc9adea44124 // indirect
 	github.com/go-sql-driver/mysql v1.6.0 // indirect
+	github.com/gogo/googleapis v1.4.1 // indirect
+	github.com/goombaio/namegenerator v0.0.0-20181006234301-989e774b106e // indirect
+	github.com/kr/fs v0.1.0 // indirect
+	github.com/miekg/dns v1.1.29 // indirect
+	github.com/moby/locker v1.0.1 // indirect
+	github.com/moby/sys/mountinfo v0.4.1 // indirect
 	github.com/onsi/ginkgo v1.16.4 // indirect
+	github.com/opencontainers/image-spec v1.0.2 // indirect
+	github.com/opencontainers/runc v1.0.2 // indirect
+	github.com/opencontainers/runtime-spec v1.0.3-0.20210326190908-1c3f411f0417 // indirect
+	github.com/opencontainers/selinux v1.8.2 // indirect
+	github.com/otiai10/copy v1.1.1 // indirect
+	github.com/pkg/sftp v1.11.0 // indirect
+	github.com/safchain/ethtool v0.0.0-20190326074333-42ed695e3de8 // indirect
+	github.com/sirupsen/logrus v1.8.1 // indirect
+	github.com/vishvananda/netlink v1.1.1-0.20201029203352-d40f9887b852 // indirect
+	github.com/vishvananda/netns v0.0.0-20200728191858-db3c7e526aae // indirect
+	github.com/weaveworks/libgitops v0.0.0-20200611103311-2c871bbbbf0c // indirect
 )
 
 require (
