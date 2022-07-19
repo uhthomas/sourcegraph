@@ -33,7 +33,17 @@ func (c *MatchOnly) String() string {
 	)
 }
 
-func fromRegexpMatches(submatches []int, namedGroups []string, lineValue string, lineNumber int) Match {
+func countLines(s string) int {
+	count := 0
+	for _, c := range s {
+		if c == '\n' {
+			count++
+		}
+	}
+	return count
+}
+
+func fromRegexpMatches(submatches []int, namedGroups []string, content string, range_ result.Range) Match {
 	env := make(Environment)
 	var firstValue string
 	var firstRange Range
@@ -47,14 +57,14 @@ func fromRegexpMatches(submatches []int, namedGroups []string, lineValue string,
 			// group inside it did not. Ignore this entry.
 			continue
 		}
-		value := lineValue[start:end]
-		range_ := newRange(lineNumber, lineNumber, start, end)
+		value := content[start:end]
+		captureRange := newRange(range_.Start.Offset+start, range_.Start.Offset+end)
 
 		if j == 0 {
 			// The first submatch is the overall match
 			// value. Don't add this to the Environment
 			firstValue = value
-			firstRange = range_
+			firstRange = captureRange
 			continue
 		}
 
@@ -64,17 +74,20 @@ func fromRegexpMatches(submatches []int, namedGroups []string, lineValue string,
 		} else {
 			v = namedGroups[j/2]
 		}
-		env[v] = Data{Value: value, Range: range_}
+		env[v] = Data{Value: value, Range: captureRange}
 	}
 	return Match{Value: firstValue, Range: firstRange, Environment: env}
 }
 
 func matchOnly(fm *result.FileMatch, r *regexp.Regexp) *MatchContext {
-	lineMatches := fm.ChunkMatches.AsLineMatches()
-	matches := make([]Match, 0, len(lineMatches))
-	for _, l := range lineMatches {
-		for _, submatches := range r.FindAllStringSubmatchIndex(l.Preview, -1) {
-			matches = append(matches, fromRegexpMatches(submatches, r.SubexpNames(), l.Preview, int(l.LineNumber)))
+	chunkMatches := fm.ChunkMatches
+	matches := make([]Match, 0, len(chunkMatches))
+	for _, cm := range chunkMatches {
+		for _, range_ := range cm.Ranges {
+			content := cm.ContentFromRange(range_)
+			for _, submatches := range r.FindAllStringSubmatchIndex(content, -1) {
+				matches = append(matches, fromRegexpMatches(submatches, r.SubexpNames(), content, range_))
+			}
 		}
 	}
 	return &MatchContext{Matches: matches, Path: fm.Path, RepositoryID: int32(fm.Repo.ID), Repository: string(fm.Repo.Name)}
