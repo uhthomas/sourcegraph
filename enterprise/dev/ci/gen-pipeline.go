@@ -43,8 +43,9 @@ func main() {
 		Version:    "-",
 		InstanceID: hostname.Get(),
 	}, log.NewSentrySinkWithOptions(sentrylib.ClientOptions{
-		Dsn:        "https://dda92819dbf24963b6d4103657e5d053@o19358.ingest.sentry.io/6110304"
-    }))
+		Dsn:   "https://dda92819dbf24963b6d4103657e5d053@o19358.ingest.sentry.io/6110304",
+		Debug: true,
+	}))
 	defer sync.Sync()
 
 	logger = log.Scoped("pipeline", "generates the pipeline for use by buildkite")
@@ -58,9 +59,7 @@ func main() {
 
 	pipeline, err := ci.GeneratePipeline(config)
 	if err != nil {
-		logger.Error("failed to generate pipeline", log.Error(err))
-		time.Sleep(2 * time.Second)
-		os.Exit(1)
+		logger.Fatal("failed to generate pipeline", log.Error(err))
 	}
 
 	if preview {
@@ -74,9 +73,7 @@ func main() {
 		_, err = pipeline.WriteJSONTo(os.Stdout)
 	}
 	if err != nil {
-		logger.Error("failed to write pipeline to stdout", log.Bool("wantYaml", wantYaml), log.Error(err))
-		time.Sleep(2 * time.Second)
-		os.Exit(1)
+		logger.Fatal("failed to write pipeline to stdout", log.Bool("wantYaml", wantYaml), log.Error(err))
 	}
 }
 
