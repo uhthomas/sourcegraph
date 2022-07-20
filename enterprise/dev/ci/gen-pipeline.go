@@ -11,7 +11,6 @@ import (
 	"strings"
 	"time"
 
-	sentrylib "github.com/getsentry/sentry-go"
 	"github.com/grafana/regexp"
 	"github.com/sourcegraph/log"
 
@@ -38,15 +37,20 @@ func init() {
 //go:generate sh -c "cd ../../../ && go run ./enterprise/dev/ci/gen-pipeline.go -docs >> doc/dev/background-information/ci/reference.md"
 func main() {
 	flag.Parse()
-	sync := log.Init(log.Resource{
+	liblog := log.Init(log.Resource{
 		Name:       "buildkite-ci",
 		Version:    "-",
 		InstanceID: hostname.Get(),
-	}, log.NewSentrySinkWithOptions(sentrylib.ClientOptions{
-		Dsn:   "https://dda92819dbf24963b6d4103657e5d053@o19358.ingest.sentry.io/6110304",
-		Debug: true,
-	}))
-	defer sync.Sync()
+	}, log.NewSentrySink())
+	defer liblog.Sync()
+
+	liblog.Update(func() log.SinksConfig {
+		return log.SinksConfig{
+			Sentry: &log.SentrySink{
+				DSN: os.Getenv("CI_SENTRY_DSN")
+			},
+		}
+	})
 
 	logger = log.Scoped("pipeline", "generates the pipeline for use by buildkite")
 
