@@ -76,6 +76,9 @@ export const SearchPageInput: React.FunctionComponent<React.PropsWithChildren<Pr
         features => features.showSearchContextManagement ?? false
     )
     const editorComponent = useExperimentalFeatures(features => features.editor ?? 'codemirror6')
+    const applySuggestionsOnEnter = useExperimentalFeatures(
+        features => features.applySearchQuerySuggestionOnEnter ?? false
+    )
 
     useEffect(() => {
         setUserQueryState({ query: props.queryPrefix || '' })
@@ -149,6 +152,7 @@ export const SearchPageInput: React.FunctionComponent<React.PropsWithChildren<Pr
                         autoFocus={!isTouchOnlyDevice && props.autoFocus !== false}
                         isExternalServicesUserModeAll={window.context.externalServicesUserMode === 'all'}
                         structuralSearchDisabled={window.context?.experimentalFeatures?.structuralSearch === 'disabled'}
+                        applySuggestionsOnEnter={applySuggestionsOnEnter}
                     />
                 </div>
                 <QuickLinks quickLinks={quickLinks} className={styles.inputSubContainer} />

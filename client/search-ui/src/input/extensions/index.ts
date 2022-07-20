@@ -62,12 +62,14 @@ export const createDefaultSuggestions = ({
     fetchSuggestions,
     disableFilterCompletion,
     disableSymbolCompletion,
+    applyOnEnter,
 }: {
     isSourcegraphDotCom: boolean
     globbing: boolean
     fetchSuggestions: (query: string) => Observable<SearchMatch[]>
     disableSymbolCompletion?: true
     disableFilterCompletion?: true
+    applyOnEnter?: boolean
 }): Extension => [
     searchQueryAutocompletion(
         createDefaultSuggestionSources({
@@ -76,7 +78,8 @@ export const createDefaultSuggestions = ({
             isSourcegraphDotCom,
             disableSymbolCompletion,
             disableFilterCompletion,
-        })
+        }),
+        applyOnEnter
     ),
     loadingIndicator(),
 ]
