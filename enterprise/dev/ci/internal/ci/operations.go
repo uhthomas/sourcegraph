@@ -934,5 +934,5 @@ func prPreview() operations.Operation {
 // This is to be used only when the linter is not involved as this will leave the git
 // repository dirty.
 func hotfixYarnProxy() bk.StepOpt {
-	return bk.Cmd(`sed -i 's/https:\/\/registry.npmjs.org/http:\/\/npm-verdaccio:4873/' yarn.lock`)
+	return bk.Cmd("./enterprise/dev/ci/scripts/hotfix-npm.sh")
 }
