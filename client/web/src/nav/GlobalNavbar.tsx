@@ -11,13 +11,13 @@ import { startWith } from 'rxjs/operators'
 
 import { ContributableMenu } from '@sourcegraph/client-api'
 import { isErrorLike } from '@sourcegraph/common'
-import { SearchContextInputProps, isSearchContextSpecAvailable } from '@sourcegraph/search'
+import { isSearchContextSpecAvailable, SearchContextInputProps } from '@sourcegraph/search'
 import { ActivationProps } from '@sourcegraph/shared/src/components/activation/Activation'
 import { ExtensionsControllerProps } from '@sourcegraph/shared/src/extensions/controller'
 import {
-    KeyboardShortcutsProps,
     KEYBOARD_SHORTCUT_SHOW_COMMAND_PALETTE,
     KEYBOARD_SHORTCUT_SWITCH_THEME,
+    KeyboardShortcutsProps,
 } from '@sourcegraph/shared/src/keyboardShortcuts/keyboardShortcuts'
 import { PlatformContextProps } from '@sourcegraph/shared/src/platform/context'
 import { Settings } from '@sourcegraph/shared/src/schema/settings.schema'
@@ -28,12 +28,12 @@ import { TelemetryProps } from '@sourcegraph/shared/src/telemetry/telemetryServi
 import { ThemeProps } from '@sourcegraph/shared/src/theme'
 import { buildGetStartedURL } from '@sourcegraph/shared/src/util/url'
 import {
-    useObservable,
     Button,
-    Link,
-    FeedbackPrompt,
     ButtonLink,
+    FeedbackPrompt,
+    Link,
     PopoverTrigger,
+    useObservable,
     useWindowSize,
 } from '@sourcegraph/wildcard'
 
@@ -55,12 +55,13 @@ import { useExperimentalFeatures, useNavbarQueryState } from '../stores'
 import { ThemePreferenceProps } from '../theme'
 import { userExternalServicesEnabledFromTags } from '../user/settings/cloud-ga'
 import { showDotComMarketing } from '../util/features'
+import { useExtensionsAsCoreFeaturesFromSettings } from '../util/settings'
 
 import { NavDropdown, NavDropdownItem } from './NavBar/NavDropdown'
 import { StatusMessagesNavItem } from './StatusMessagesNavItem'
 import { UserNavItem } from './UserNavItem'
 
-import { NavGroup, NavItem, NavBar, NavLink, NavActions, NavAction } from '.'
+import { NavAction, NavActions, NavBar, NavGroup, NavItem, NavLink } from '.'
 
 import styles from './GlobalNavbar.module.scss'
 
@@ -147,20 +148,20 @@ const AnalyticsNavItem: React.FunctionComponent = () => {
 }
 
 export const GlobalNavbar: React.FunctionComponent<React.PropsWithChildren<Props>> = ({
-    authRequired,
-    showSearchBox,
-    variant,
-    isLightTheme,
-    branding,
-    location,
-    history,
-    minimalNavLinks,
-    isSourcegraphDotCom,
-    isRepositoryRelatedPage,
-    codeInsightsEnabled,
-    searchContextsEnabled,
-    ...props
-}) => {
+                                                                                          authRequired,
+                                                                                          showSearchBox,
+                                                                                          variant,
+                                                                                          isLightTheme,
+                                                                                          branding,
+                                                                                          location,
+                                                                                          history,
+                                                                                          minimalNavLinks,
+                                                                                          isSourcegraphDotCom,
+                                                                                          isRepositoryRelatedPage,
+                                                                                          codeInsightsEnabled,
+                                                                                          searchContextsEnabled,
+                                                                                          ...props
+                                                                                      }) => {
     // Workaround: can't put this in optional parameter value because of https://github.com/babel/babel/issues/11166
     branding = branding ?? window.context?.branding
 
@@ -182,10 +183,10 @@ export const GlobalNavbar: React.FunctionComponent<React.PropsWithChildren<Props
                       // to prevent flashing and moving content in the query bar. This optimizes for the most common use case where
                       // user selects a search context from the dropdown.
                       // See https://github.com/sourcegraph/sourcegraph/issues/19918 for more info.
-                      isSearchContextSpecAvailable({
-                          spec: globalSearchContextSpec.spec,
-                          platformContext: props.platformContext,
-                      }).pipe(startWith(true))
+                    isSearchContextSpecAvailable({
+                        spec: globalSearchContextSpec.spec,
+                        platformContext: props.platformContext,
+                    }).pipe(startWith(true))
                     : of(false),
             [globalSearchContextSpec, searchContextsEnabled, props.platformContext]
         )
@@ -253,7 +254,7 @@ export const GlobalNavbar: React.FunctionComponent<React.PropsWithChildren<Props
     const searchNavBarItems = useMemo(() => {
         const items: (NavDropdownItem | false)[] = [
             searchContextsEnabled &&
-                !!showSearchContext && { path: EnterprisePageRoutes.Contexts, content: 'Contexts' },
+            !!showSearchContext && { path: EnterprisePageRoutes.Contexts, content: 'Contexts' },
         ]
         return items.filter<NavDropdownItem>((item): item is NavDropdownItem => !!item)
     }, [searchContextsEnabled, showSearchContext])
