@@ -18,18 +18,14 @@ export function validatePassword(
     password: string
 ): string | undefined {
 
+    // minPasswordLen always has a value so we do it first
+    if (password.length < minPasswordLen) {
+        return 'Password must be at least ' + minPasswordLen.toString() + ' characters.'
+    }
+
     let passwordPolicyReference = getPasswordPolicy()
 
     if (passwordPolicyReference?.enabled) {
-        if (
-            password.length < minPasswordLen
-        ) {
-            return (
-                'Password must be greater than ' +
-                minPasswordLen.toString() +
-                ' characters.'
-            )
-        }
         if (
             passwordPolicyReference?.numberOfSpecialCharacters &&
             passwordPolicyReference.numberOfSpecialCharacters > 0
@@ -72,10 +68,40 @@ export function validatePassword(
         return undefined
     }
 
-    if (password.length < minPasswordLen) {
-        return 'Password must be at least ' + minPasswordLen.toString() + ' characters.'
-    }
 
     return undefined
 
+}
+
+export function getPasswordRequirements(
+    context: Pick<SourcegraphContext, 'authProviders' | 'sourcegraphDotComMode' | 'experimentalFeatures' |
+        'authPasswordPolicy'>
+): string {
+    let passwordPolicyReference = getPasswordPolicy()
+
+    let requirements: string  = 'Your password must include at least ' + minPasswordLen.toString() + ' characters'
+
+    if (passwordPolicyReference && passwordPolicyReference.enabled) {
+        console.log('Using enhanced password policy.')
+
+        if (
+            passwordPolicyReference.numberOfSpecialCharacters &&
+            passwordPolicyReference.numberOfSpecialCharacters > 0
+        ) {
+            requirements += ', ' + String(passwordPolicyReference.numberOfSpecialCharacters) + ' special characters'
+        }
+        if (
+            passwordPolicyReference.requireAtLeastOneNumber &&
+            passwordPolicyReference.requireAtLeastOneNumber
+        ) {
+            requirements += ', at least one number'
+        }
+        if (
+            passwordPolicyReference.requireUpperandLowerCase &&
+            passwordPolicyReference.requireUpperandLowerCase
+        ) {
+            requirements += ', at least one uppercase letter'
+        }
+
+    return requirements
 }
