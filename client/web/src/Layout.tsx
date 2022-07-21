@@ -1,7 +1,7 @@
 import React, { Suspense, useEffect, useMemo } from 'react'
 
 import classNames from 'classnames'
-import { Redirect, Route, RouteComponentProps, Switch, matchPath } from 'react-router'
+import { matchPath, Redirect, Route, RouteComponentProps, Switch } from 'react-router'
 import { Observable } from 'rxjs'
 
 import { TabbedPanelContent } from '@sourcegraph/branded/src/components/panel/TabbedPanelContent'
@@ -11,8 +11,8 @@ import { FetchFileParameters } from '@sourcegraph/search-ui'
 import { ActivationProps } from '@sourcegraph/shared/src/components/activation/Activation'
 import { ExtensionsControllerProps } from '@sourcegraph/shared/src/extensions/controller'
 import {
-    KeyboardShortcutsProps,
     KEYBOARD_SHORTCUT_SHOW_HELP,
+    KeyboardShortcutsProps,
 } from '@sourcegraph/shared/src/keyboardShortcuts/keyboardShortcuts'
 import { KeyboardShortcutsHelp } from '@sourcegraph/shared/src/keyboardShortcuts/KeyboardShortcutsHelp'
 import { PlatformContextProps } from '@sourcegraph/shared/src/platform/context'
@@ -36,6 +36,7 @@ import { useScrollToLocationHash } from './components/useScrollToLocationHash'
 import { GlobalContributions } from './contributions'
 import { ExtensionAreaRoute } from './extensions/extension/ExtensionArea'
 import { ExtensionAreaHeaderNavItem } from './extensions/extension/ExtensionAreaHeader'
+import { excludeExtensionsRoute } from './extensions/extensions'
 import { ExtensionsAreaRoute } from './extensions/ExtensionsArea'
 import { ExtensionsAreaHeaderActionButton } from './extensions/ExtensionsAreaHeader'
 import { useFeatureFlag } from './featureFlags/useFeatureFlag'
@@ -51,9 +52,9 @@ import { RepoHeaderActionButton } from './repo/RepoHeader'
 import { RepoRevisionContainerRoute } from './repo/RepoRevisionContainer'
 import { RepoSettingsAreaRoute } from './repo/settings/RepoSettingsArea'
 import { RepoSettingsSideBarGroup } from './repo/settings/RepoSettingsSidebar'
-import { LayoutRouteProps, LayoutRouteComponentProps } from './routes'
-import { PageRoutes, EnterprisePageRoutes } from './routes.constants'
-import { parseSearchURLQuery, HomePanelsProps, SearchStreamingProps, parseSearchURL } from './search'
+import { LayoutRouteComponentProps, LayoutRouteProps } from './routes'
+import { EnterprisePageRoutes, PageRoutes } from './routes.constants'
+import { HomePanelsProps, parseSearchURL, parseSearchURLQuery, SearchStreamingProps } from './search'
 import { NotepadContainer } from './search/Notepad'
 import { SiteAdminAreaRoute } from './site-admin/SiteAdminArea'
 import { SiteAdminSideBarGroups } from './site-admin/SiteAdminSidebar'
@@ -63,6 +64,7 @@ import { UserAreaRoute } from './user/area/UserArea'
 import { UserAreaHeaderNavItem } from './user/area/UserAreaHeader'
 import { UserSettingsAreaRoute } from './user/settings/UserSettingsArea'
 import { UserSettingsSidebarItems } from './user/settings/UserSettingsSidebar'
+import { useExtensionsAsCoreFeaturesFromSettings } from './util/settings'
 import { parseBrowserRepoURL } from './util/url'
 
 import styles from './Layout.module.scss'
@@ -124,7 +126,9 @@ export interface LayoutProps
 const CONTRAST_COMPLIANT_CLASSNAME = 'theme-contrast-compliant-syntax-highlighting'
 
 export const Layout: React.FunctionComponent<React.PropsWithChildren<LayoutProps>> = props => {
-    const routeMatch = props.routes.find(({ path, exact }) => matchPath(props.location.pathname, { path, exact }))?.path
+    const extensionsAsCoreFeatures = useExtensionsAsCoreFeaturesFromSettings(props.settingsCascade)
+    const routes = extensionsAsCoreFeatures ? excludeExtensionsRoute(props.routes) : props.routes
+    const routeMatch = routes.find(({ path, exact }) => matchPath(props.location.pathname, { path, exact }))?.path
     const isSearchRelatedPage = (routeMatch === '/:repoRevAndRest+' || routeMatch?.startsWith('/search')) ?? false
     const minimalNavLinks = routeMatch === '/cncf'
     const isSearchHomepage = props.location.pathname === '/search' && !parseSearchURLQuery(props.location.search)
@@ -242,8 +246,8 @@ export const Layout: React.FunctionComponent<React.PropsWithChildren<LayoutProps
                         isSearchHomepage
                             ? 'low-profile'
                             : isCommunitySearchContextPage
-                            ? 'low-profile-with-logo'
-                            : 'default'
+                                ? 'low-profile-with-logo'
+                                : 'default'
                     }
                     minimalNavLinks={minimalNavLinks}
                     isSearchAutoFocusRequired={!isSearchAutoFocusRequired}
@@ -260,7 +264,7 @@ export const Layout: React.FunctionComponent<React.PropsWithChildren<LayoutProps
                     }
                 >
                     <Switch>
-                        {props.routes.map(
+                        {routes.map(
                             ({ render, condition = () => true, ...route }) =>
                                 condition(context) && (
                                     <Route
