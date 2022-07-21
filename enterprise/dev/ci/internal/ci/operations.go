@@ -147,6 +147,7 @@ func addCIScriptsTests(pipeline *bk.Pipeline) {
 func addGraphQLLint(pipeline *bk.Pipeline) {
 	pipeline.AddStep(":lipstick: :graphql: GraphQL lint",
 		withYarnCache(),
+		hotfixYarnProxy(),
 		bk.Cmd("dev/ci/yarn-run.sh lint:graphql"))
 }
 
@@ -161,6 +162,7 @@ func addPrettier(pipeline *bk.Pipeline) {
 func addTypescriptCheck(pipeline *bk.Pipeline) {
 	pipeline.AddStep(":typescript: Build TS",
 		withYarnCache(),
+		hotfixYarnProxy(),
 		bk.Cmd("dev/ci/yarn-run.sh build-ts"))
 }
 
@@ -168,10 +170,12 @@ func addTypescriptCheck(pipeline *bk.Pipeline) {
 func addClientLintersForAllFiles(pipeline *bk.Pipeline) {
 	pipeline.AddStep(":eslint: ESLint (all)",
 		withYarnCache(),
+		hotfixYarnProxy(),
 		bk.Cmd("dev/ci/yarn-run.sh lint:js:all"))
 
 	pipeline.AddStep(":stylelint: Stylelint (all)",
 		withYarnCache(),
+		hotfixYarnProxy(),
 		bk.Cmd("dev/ci/yarn-run.sh lint:css:all"))
 }
 
@@ -191,6 +195,7 @@ func addWebApp(pipeline *bk.Pipeline) {
 	// Webapp build
 	pipeline.AddStep(":webpack::globe_with_meridians: Build",
 		withYarnCache(),
+		hotfixYarnProxy(),
 		bk.Cmd("dev/ci/yarn-build.sh client/web"),
 		bk.Env("NODE_ENV", "production"),
 		bk.Env("ENTERPRISE", ""))
@@ -198,6 +203,7 @@ func addWebApp(pipeline *bk.Pipeline) {
 	// Webapp enterprise build
 	pipeline.AddStep(":webpack::globe_with_meridians::moneybag: Enterprise build",
 		withYarnCache(),
+		hotfixYarnProxy(),
 		bk.Cmd("dev/ci/yarn-build.sh client/web"),
 		bk.Env("NODE_ENV", "production"),
 		bk.Env("ENTERPRISE", "1"),
@@ -208,6 +214,7 @@ func addWebApp(pipeline *bk.Pipeline) {
 	// Webapp tests
 	pipeline.AddStep(":jest::globe_with_meridians: Test (client/web)",
 		withYarnCache(),
+		hotfixYarnProxy(),
 		bk.AnnotatedCmd("dev/ci/yarn-test.sh client/web", bk.AnnotatedCmdOpts{
 			TestReports: &bk.TestReportOpts{
 				TestSuiteKeyVariableName: "BUILDKITE_ANALYTICS_FRONTEND_UNIT_TEST_SUITE_API_KEY",
@@ -223,6 +230,7 @@ func buildWebAppWithSentrySourcemaps(version string) operations.Operation {
 		// Webapp build with Sentry's webpack plugin enabled
 		pipeline.AddStep(":webpack::globe_with_meridians: Build and upload sourcemaps to Sentry",
 			withYarnCache(),
+			hotfixYarnProxy(),
 			bk.Cmd("dev/ci/yarn-build.sh client/web"),
 			bk.Env("NODE_ENV", "production"),
 			bk.Env("ENTERPRISE", ""),
@@ -245,6 +253,7 @@ func addVsceIntegrationTests(pipeline *bk.Pipeline) {
 	pipeline.AddStep(
 		":vscode: Puppeteer tests for VS Code extension",
 		withYarnCache(),
+		hotfixYarnProxy(),
 		bk.Cmd("yarn --frozen-lockfile --network-timeout 60000"),
 		bk.Cmd("yarn generate"),
 		bk.Cmd("yarn --cwd client/vscode -s build:test"),
@@ -260,6 +269,7 @@ func addBrowserExtensionIntegrationTests(parallelTestCount int) operations.Opera
 			pipeline.AddStep(
 				fmt.Sprintf(":%s: Puppeteer tests for %s extension", browser, browser),
 				withYarnCache(),
+				hotfixYarnProxy(),
 				bk.Env("EXTENSION_PERMISSIONS_ALL_URLS", "true"),
 				bk.Env("BROWSER", browser),
 				bk.Env("LOG_BROWSER_CONSOLE", "false"),
@@ -283,6 +293,7 @@ func recordBrowserExtensionIntegrationTests(pipeline *bk.Pipeline) {
 		pipeline.AddStep(
 			fmt.Sprintf(":%s: Puppeteer tests for %s extension", browser, browser),
 			withYarnCache(),
+			hotfixYarnProxy(),
 			bk.Env("EXTENSION_PERMISSIONS_ALL_URLS", "true"),
 			bk.Env("BROWSER", browser),
 			bk.Env("LOG_BROWSER_CONSOLE", "false"),
@@ -301,6 +312,7 @@ func recordBrowserExtensionIntegrationTests(pipeline *bk.Pipeline) {
 func addBrowserExtensionUnitTests(pipeline *bk.Pipeline) {
 	pipeline.AddStep(":jest::chrome: Test (client/browser)",
 		withYarnCache(),
+		hotfixYarnProxy(),
 		bk.AnnotatedCmd("dev/ci/yarn-test.sh client/browser", bk.AnnotatedCmdOpts{
 			TestReports: &bk.TestReportOpts{
 				TestSuiteKeyVariableName: "BUILDKITE_ANALYTICS_FRONTEND_UNIT_TEST_SUITE_API_KEY",
@@ -312,6 +324,7 @@ func addBrowserExtensionUnitTests(pipeline *bk.Pipeline) {
 func addJetBrainsUnitTests(pipeline *bk.Pipeline) {
 	pipeline.AddStep(":jest::java: Test (client/jetbrains)",
 		withYarnCache(),
+		hotfixYarnProxy(),
 		bk.Cmd("yarn --frozen-lockfile --network-timeout 60000"),
 		bk.Cmd("yarn generate"),
 		bk.Cmd("yarn --cwd client/jetbrains -s build"),
@@ -329,6 +342,7 @@ func clientIntegrationTests(pipeline *bk.Pipeline) {
 	// Build web application used for integration tests to share it between multiple parallel steps.
 	pipeline.AddStep(":puppeteer::electric_plug: Puppeteer tests prep",
 		withYarnCache(),
+		hotfixYarnProxy(),
 		bk.Key(prepStepKey),
 		bk.Env("ENTERPRISE", "1"),
 		bk.Env("INTEGRATION_TESTS", "true"),
@@ -349,6 +363,7 @@ func clientIntegrationTests(pipeline *bk.Pipeline) {
 
 		pipeline.AddStep(stepLabel,
 			withYarnCache(),
+			hotfixYarnProxy(),
 			bk.DependsOn(prepStepKey),
 			bk.DisableManualRetry("The Percy build is not finalized if one of the concurrent agents fails. To retry correctly, restart the entire pipeline."),
 			bk.Env("PERCY_ON", "true"),
@@ -364,6 +379,7 @@ func clientChromaticTests(opts CoreTestOperationsOptions) operations.Operation {
 	return func(pipeline *bk.Pipeline) {
 		stepOpts := []bk.StepOpt{
 			withYarnCache(),
+			hotfixYarnProxy(),
 			bk.AutomaticRetry(3),
 			bk.Cmd("yarn --mutex network --frozen-lockfile --network-timeout 60000 --silent"),
 			bk.Cmd("yarn gulp generate"),
@@ -391,6 +407,7 @@ func frontendTests(pipeline *bk.Pipeline) {
 	// Shared tests
 	pipeline.AddStep(":jest: Test (all)",
 		withYarnCache(),
+		hotfixYarnProxy(),
 		bk.AnnotatedCmd("dev/ci/yarn-test.sh --testPathIgnorePatterns client/web client/browser", bk.AnnotatedCmdOpts{
 			TestReports: &bk.TestReportOpts{
 				TestSuiteKeyVariableName: "BUILDKITE_ANALYTICS_FRONTEND_UNIT_TEST_SUITE_API_KEY",
@@ -912,4 +929,10 @@ func prPreview() operations.Operation {
 			bk.SoftFail(),
 			bk.Cmd("dev/ci/render-pr-preview.sh"))
 	}
+}
+
+// This is to be used only when the linter is not involved as this will leave the git
+// repository dirty.
+func hotfixYarnProxy() bk.StepOpt {
+	return bk.Cmd(`sed -i 's/https:\/\/registry.npmjs.org/http:\/\/npm-verdaccio:4873/' yarn.lock`)
 }
