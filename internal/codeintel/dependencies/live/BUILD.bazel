@@ -1,0 +1,23 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "live",
+    srcs = [
+        "git.go",
+        "init.go",
+        "syncer.go",
+    ],
+    importpath = "github.com/sourcegraph/sourcegraph/internal/codeintel/dependencies/live",
+    visibility = ["//:__subpackages__"],
+    deps = [
+        "//internal/api",
+        "//internal/authz",
+        "//internal/codeintel/dependencies",
+        "//internal/database",
+        "//internal/gitserver",
+        "//internal/gitserver/gitdomain",
+        "//internal/repoupdater",
+        "//internal/repoupdater/protocol",
+        "@com_github_sourcegraph_sourcegraph_lib//errors",
+    ],
+)

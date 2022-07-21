@@ -1,0 +1,22 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "commitgraph",
+    srcs = [
+        "config.go",
+        "iface.go",
+        "init.go",
+        "operations.go",
+        "updater.go",
+    ],
+    importpath = "github.com/sourcegraph/sourcegraph/internal/codeintel/uploads/background/commitgraph",
+    visibility = ["//:__subpackages__"],
+    deps = [
+        "//internal/env",
+        "//internal/goroutine",
+        "//internal/observation",
+        "@com_github_prometheus_client_golang//prometheus",
+        "@com_github_sourcegraph_log//:log",
+        "@com_github_sourcegraph_sourcegraph_lib//errors",
+    ],
+)

@@ -1,0 +1,34 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "fresh",
+    srcs = [
+        "autoindexing_scheduler_job.go",
+        "commitgraph_updater_job.go",
+        "upload_expirer.go",
+        "upload_janitor.go",
+    ],
+    importpath = "github.com/sourcegraph/sourcegraph/enterprise/cmd/worker/internal/codeintel/fresh",
+    visibility = ["//enterprise/cmd/worker:__subpackages__"],
+    deps = [
+        "//cmd/worker/job",
+        "//cmd/worker/shared/init/codeintel",
+        "//cmd/worker/shared/init/db",
+        "//internal/codeintel/autoindexing",
+        "//internal/codeintel/autoindexing/background/scheduler",
+        "//internal/codeintel/policies",
+        "//internal/codeintel/policies/enterprise",
+        "//internal/codeintel/uploads",
+        "//internal/codeintel/uploads/background/cleanup",
+        "//internal/codeintel/uploads/background/commitgraph",
+        "//internal/codeintel/uploads/background/expiration",
+        "//internal/database",
+        "//internal/env",
+        "//internal/goroutine",
+        "//internal/observation",
+        "//internal/trace",
+        "@com_github_opentracing_opentracing_go//:opentracing-go",
+        "@com_github_prometheus_client_golang//prometheus",
+        "@com_github_sourcegraph_log//:log",
+    ],
+)

@@ -1,0 +1,8 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "storetypes",
+    srcs = ["index_progress.go"],
+    importpath = "github.com/sourcegraph/sourcegraph/internal/database/migration/storetypes",
+    visibility = ["//:__subpackages__"],
+)

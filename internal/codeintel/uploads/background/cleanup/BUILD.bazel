@@ -1,0 +1,57 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "cleanup",
+    srcs = [
+        "abandoned_uploads.go",
+        "auditlog_janitor.go",
+        "config.go",
+        "deleted_repositories.go",
+        "expired_upload_deleter.go",
+        "hard_delete.go",
+        "iface.go",
+        "init.go",
+        "janitor.go",
+        "observability.go",
+        "unknown_commits.go",
+    ],
+    importpath = "github.com/sourcegraph/sourcegraph/internal/codeintel/uploads/background/cleanup",
+    visibility = ["//:__subpackages__"],
+    deps = [
+        "//internal/api",
+        "//internal/codeintel/autoindexing/shared",
+        "//internal/codeintel/stores/dbstore",
+        "//internal/codeintel/uploads/shared",
+        "//internal/database",
+        "//internal/database/basestore",
+        "//internal/env",
+        "//internal/gitserver",
+        "//internal/gitserver/gitdomain",
+        "//internal/goroutine",
+        "//internal/observation",
+        "@com_github_derision_test_glock//:glock",
+        "@com_github_prometheus_client_golang//prometheus",
+        "@com_github_sourcegraph_log//:log",
+        "@com_github_sourcegraph_sourcegraph_lib//errors",
+    ],
+)
+
+go_test(
+    name = "cleanup_test",
+    srcs = [
+        "mocks_test.go",
+        "unknown_commits_test.go",
+    ],
+    embed = [":cleanup"],
+    deps = [
+        "//internal/api",
+        "//internal/codeintel/autoindexing/shared",
+        "//internal/codeintel/uploads/shared",
+        "//internal/database/basestore",
+        "//internal/gitserver",
+        "//internal/gitserver/gitdomain",
+        "//internal/observation",
+        "@com_github_google_go_cmp//cmp",
+        "@com_github_sourcegraph_log//logtest",
+    ],
+)

@@ -1,0 +1,23 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "src-cli",
+    srcs = [
+        "consts.go",
+        "version.go",
+    ],
+    importpath = "github.com/sourcegraph/sourcegraph/internal/src-cli",
+    visibility = ["//:__subpackages__"],
+    deps = [
+        "@com_github_masterminds_semver//:semver",
+        "@com_github_sourcegraph_sourcegraph_lib//errors",
+        "@com_github_tomnomnom_linkheader//:linkheader",
+    ],
+)
+
+go_test(
+    name = "src-cli_test",
+    srcs = ["version_test.go"],
+    embed = [":src-cli"],
+    deps = ["@com_github_masterminds_semver//:semver"],
+)

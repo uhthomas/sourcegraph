@@ -1,0 +1,24 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "client",
+    srcs = [
+        "client.go",
+        "mocks_temp.go",
+    ],
+    importpath = "github.com/sourcegraph/sourcegraph/internal/search/client",
+    visibility = ["//:__subpackages__"],
+    deps = [
+        "//internal/database",
+        "//internal/endpoint",
+        "//internal/gitserver",
+        "//internal/search",
+        "//internal/search/execute",
+        "//internal/search/job",
+        "//internal/search/run",
+        "//internal/search/streaming",
+        "//schema",
+        "@com_github_google_zoekt//:zoekt",
+        "@com_github_sourcegraph_log//:log",
+    ],
+)

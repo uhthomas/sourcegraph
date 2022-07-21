@@ -1,0 +1,46 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "billing",
+    srcs = [
+        "customers.go",
+        "customers_graphql.go",
+        "db.go",
+        "doc.go",
+        "events_graphql.go",
+        "graphql.go",
+        "plans.go",
+        "plans_graphql.go",
+        "subscriptions.go",
+    ],
+    importpath = "github.com/sourcegraph/sourcegraph/enterprise/cmd/frontend/internal/dotcom/billing",
+    visibility = ["//enterprise/cmd/frontend:__subpackages__"],
+    deps = [
+        "//cmd/frontend/backend",
+        "//cmd/frontend/graphqlbackend",
+        "//enterprise/cmd/frontend/internal/dotcom/stripeutil",
+        "//enterprise/internal/license",
+        "//internal/database",
+        "@com_github_inconshreveable_log15//:log15",
+        "@com_github_keegancsmith_sqlf//:sqlf",
+        "@com_github_sourcegraph_sourcegraph_lib//errors",
+        "@com_github_stripe_stripe_go//:stripe-go",
+        "@com_github_stripe_stripe_go//customer",
+        "@com_github_stripe_stripe_go//plan",
+    ],
+)
+
+go_test(
+    name = "billing_test",
+    srcs = [
+        "customers_test.go",
+        "db_test.go",
+    ],
+    embed = [":billing"],
+    deps = [
+        "//internal/database",
+        "//internal/database/dbtest",
+        "//internal/errcode",
+        "@com_github_sourcegraph_log//logtest",
+    ],
+)

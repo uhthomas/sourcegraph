@@ -1,0 +1,29 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "codeownership",
+    srcs = ["job.go"],
+    importpath = "github.com/sourcegraph/sourcegraph/internal/search/codeownership",
+    visibility = ["//:__subpackages__"],
+    deps = [
+        "//internal/search",
+        "//internal/search/job",
+        "//internal/search/result",
+        "//internal/search/streaming",
+        "//internal/trace",
+        "@com_github_opentracing_opentracing_go//log",
+        "@com_github_sourcegraph_sourcegraph_lib//errors",
+    ],
+)
+
+go_test(
+    name = "codeownership_test",
+    srcs = ["job_test.go"],
+    embed = [":codeownership"],
+    deps = [
+        "//internal/search",
+        "//internal/search/result",
+        "@com_github_google_go_cmp//cmp",
+        "@com_github_google_go_cmp//cmp/cmpopts",
+    ],
+)

@@ -147,7 +147,7 @@ func collectAWSResources(ctx context.Context, since time.Time, verbose bool, tag
 
 	// iterate over regions based on accessible EC2 regions
 	regions, err := aws_ec2.NewFromConfig(cfg).DescribeRegions(ctx, &aws_ec2.DescribeRegionsInput{
-		AllRegions: true,
+		AllRegions: aws.Bool(true),
 	})
 	if err != nil {
 		return nil, errors.Errorf("failed to list regions: %w", err)

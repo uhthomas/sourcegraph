@@ -1,0 +1,27 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "graphql",
+    srcs = [
+        "lockfile_index_connection_resolver.go",
+        "lockfile_index_resolver.go",
+        "resolver.go",
+    ],
+    importpath = "github.com/sourcegraph/sourcegraph/internal/codeintel/dependencies/transport/graphql",
+    visibility = ["//:__subpackages__"],
+    deps = [
+        "//cmd/frontend/backend",
+        "//cmd/frontend/graphqlbackend",
+        "//cmd/frontend/graphqlbackend/graphqlutil",
+        "//internal/api",
+        "//internal/codeintel/dependencies",
+        "//internal/codeintel/dependencies/live",
+        "//internal/codeintel/dependencies/shared",
+        "//internal/database",
+        "//internal/types",
+        "@com_github_graph_gophers_graphql_go//:graphql-go",
+        "@com_github_graph_gophers_graphql_go//relay",
+        "@com_github_sourcegraph_log//:log",
+        "@com_github_sourcegraph_sourcegraph_lib//errors",
+    ],
+)

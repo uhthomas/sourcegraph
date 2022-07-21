@@ -1,0 +1,42 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "migration",
+    srcs = [
+        "discovery.go",
+        "migration.go",
+    ],
+    importpath = "github.com/sourcegraph/sourcegraph/enterprise/internal/insights/migration",
+    visibility = ["//enterprise:__subpackages__"],
+    deps = [
+        "//enterprise/internal/database",
+        "//enterprise/internal/insights/discovery",
+        "//enterprise/internal/insights/store",
+        "//enterprise/internal/insights/types",
+        "//internal/api",
+        "//internal/database",
+        "//internal/database/basestore",
+        "//internal/database/dbutil",
+        "//internal/insights",
+        "//internal/oobmigration",
+        "@com_github_inconshreveable_log15//:log15",
+        "@com_github_keegancsmith_sqlf//:sqlf",
+        "@com_github_segmentio_ksuid//:ksuid",
+        "@com_github_sourcegraph_sourcegraph_lib//errors",
+    ],
+)
+
+go_test(
+    name = "migration_test",
+    srcs = ["migration_test.go"],
+    embed = [":migration"],
+    deps = [
+        "//enterprise/internal/database",
+        "//enterprise/internal/insights/store",
+        "//enterprise/internal/insights/types",
+        "//internal/database/dbtest",
+        "@com_github_google_go_cmp//cmp",
+        "@com_github_hexops_autogold//:autogold",
+        "@com_github_sourcegraph_log//logtest",
+    ],
+)

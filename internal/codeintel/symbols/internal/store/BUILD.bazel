@@ -1,0 +1,23 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "store",
+    srcs = [
+        "observability.go",
+        "scan.go",
+        "store.go",
+    ],
+    importpath = "github.com/sourcegraph/sourcegraph/internal/codeintel/symbols/internal/store",
+    visibility = ["//:__subpackages__"],
+    deps = [
+        "//internal/codeintel/symbols/shared",
+        "//internal/database",
+        "//internal/database/basestore",
+        "//internal/database/dbutil",
+        "//internal/metrics",
+        "//internal/observation",
+        "@com_github_keegancsmith_sqlf//:sqlf",
+        "@com_github_opentracing_opentracing_go//log",
+        "@com_github_sourcegraph_sourcegraph_lib//errors",
+    ],
+)

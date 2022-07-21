@@ -1,0 +1,37 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "apiclient",
+    srcs = [
+        "baseclient.go",
+        "client.go",
+        "observability.go",
+        "telemetry.go",
+    ],
+    importpath = "github.com/sourcegraph/sourcegraph/enterprise/cmd/executor/internal/apiclient",
+    visibility = ["//enterprise/cmd/executor:__subpackages__"],
+    deps = [
+        "//enterprise/internal/executor",
+        "//internal/httpcli",
+        "//internal/metrics",
+        "//internal/observation",
+        "//internal/version",
+        "//internal/workerutil",
+        "@com_github_inconshreveable_log15//:log15",
+        "@com_github_opentracing_opentracing_go//log",
+        "@com_github_sourcegraph_sourcegraph_lib//errors",
+        "@org_golang_x_net//context/ctxhttp",
+    ],
+)
+
+go_test(
+    name = "apiclient_test",
+    srcs = ["client_test.go"],
+    embed = [":apiclient"],
+    deps = [
+        "//enterprise/internal/executor",
+        "//internal/observation",
+        "//internal/workerutil",
+        "@com_github_google_go_cmp//cmp",
+    ],
+)

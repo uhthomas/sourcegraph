@@ -1,0 +1,33 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "codeintel",
+    srcs = [
+        "clients.go",
+        "codeinteldb.go",
+        "dbstore.go",
+        "lsifstore.go",
+    ],
+    importpath = "github.com/sourcegraph/sourcegraph/cmd/worker/shared/init/codeintel",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//cmd/worker/memo",
+        "//cmd/worker/shared/init/db",
+        "//internal/codeintel/stores",
+        "//internal/codeintel/stores/dbstore",
+        "//internal/codeintel/stores/gitserver",
+        "//internal/codeintel/stores/lsifstore",
+        "//internal/codeintel/stores/repoupdater",
+        "//internal/conf",
+        "//internal/conf/conftypes",
+        "//internal/database",
+        "//internal/database/connections/live",
+        "//internal/observation",
+        "//internal/trace",
+        "//internal/workerutil/dbworker/store",
+        "@com_github_opentracing_opentracing_go//:opentracing-go",
+        "@com_github_prometheus_client_golang//prometheus",
+        "@com_github_sourcegraph_log//:log",
+        "@com_github_sourcegraph_sourcegraph_lib//errors",
+    ],
+)

@@ -1,0 +1,17 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "execute",
+    srcs = ["execute.go"],
+    importpath = "github.com/sourcegraph/sourcegraph/internal/search/execute",
+    visibility = ["//:__subpackages__"],
+    deps = [
+        "//internal/search",
+        "//internal/search/job",
+        "//internal/search/job/jobutil",
+        "//internal/search/predicate",
+        "//internal/search/run",
+        "//internal/search/streaming",
+        "//internal/trace",
+    ],
+)

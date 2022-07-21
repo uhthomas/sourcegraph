@@ -1,0 +1,8 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "memo",
+    srcs = ["memo.go"],
+    importpath = "github.com/sourcegraph/sourcegraph/cmd/worker/memo",
+    visibility = ["//visibility:public"],
+)

@@ -1,0 +1,34 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "codeintel",
+    srcs = [
+        "indexing_config.go",
+        "indexing_job.go",
+        "janitor_config.go",
+        "janitor_job.go",
+    ],
+    importpath = "github.com/sourcegraph/sourcegraph/enterprise/cmd/worker/internal/codeintel",
+    visibility = ["//enterprise/cmd/worker:__subpackages__"],
+    deps = [
+        "//cmd/worker/job",
+        "//cmd/worker/shared/init/codeintel",
+        "//cmd/worker/shared/init/db",
+        "//enterprise/cmd/worker/internal/codeintel/indexing",
+        "//enterprise/cmd/worker/internal/codeintel/janitor",
+        "//enterprise/cmd/worker/internal/executorqueue",
+        "//internal/codeintel/autoindexing",
+        "//internal/codeintel/stores/dbstore",
+        "//internal/database",
+        "//internal/env",
+        "//internal/goroutine",
+        "//internal/observation",
+        "//internal/trace",
+        "//internal/workerutil",
+        "//internal/workerutil/dbworker",
+        "@com_github_opentracing_opentracing_go//:opentracing-go",
+        "@com_github_prometheus_client_golang//prometheus",
+        "@com_github_sourcegraph_log//:log",
+        "@com_github_sourcegraph_sourcegraph_lib//errors",
+    ],
+)

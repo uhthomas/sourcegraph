@@ -1,0 +1,34 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "policies",
+    srcs = [
+        "init.go",
+        "observability.go",
+        "service.go",
+    ],
+    importpath = "github.com/sourcegraph/sourcegraph/internal/codeintel/policies",
+    visibility = ["//:__subpackages__"],
+    deps = [
+        "//internal/codeintel/policies/internal/store",
+        "//internal/codeintel/policies/shared",
+        "//internal/database",
+        "//internal/metrics",
+        "//internal/observation",
+        "//internal/trace",
+        "@com_github_opentracing_opentracing_go//:opentracing-go",
+        "@com_github_prometheus_client_golang//prometheus",
+        "@com_github_sourcegraph_log//:log",
+        "@com_github_sourcegraph_sourcegraph_lib//errors",
+    ],
+)
+
+go_test(
+    name = "policies_test",
+    srcs = ["mocks_test.go"],
+    embed = [":policies"],
+    deps = [
+        "//internal/codeintel/policies/internal/store",
+        "//internal/codeintel/policies/shared",
+    ],
+)

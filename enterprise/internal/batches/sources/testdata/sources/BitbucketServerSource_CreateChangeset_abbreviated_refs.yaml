@@ -1,0 +1,54 @@
+---
+version: 1
+interactions:
+- request:
+    body: ""
+    form: {}
+    headers:
+      Content-Type:
+      - application/json; charset=utf-8
+    url: https://bitbucket.sgdev.org/rest/default-reviewers/1.0/projects/SOUR/repos/automation-testing/reviewers?sourceRefId=refs%2Fheads%2Ftest-pr-bbs-11&sourceRepoId=10070&targetRefId=refs%2Fheads%2Fmaster&targetRepoId=10070
+    method: GET
+  response:
+    body: '{"errors":[{"context":null,"message":"Authentication failed. Please check
+      your credentials and try again.","exceptionName":"com.atlassian.bitbucket.auth.IncorrectPasswordAuthenticationException"}]}'
+    headers:
+      Content-Type:
+      - application/json;charset=UTF-8
+      Date:
+      - Thu, 21 Jul 2022 20:28:53 GMT
+      Server:
+      - Caddy
+      Vary:
+      - accept-encoding
+      X-Arequestid:
+      - '@GMKG7Bx1228x664327x0'
+    status: 401 Unauthorized
+    code: 401
+    duration: ""
+- request:
+    body: |
+      {"title":"This is a test PR","description":"This is the body of a test PR","state":"OPEN","open":true,"closed":false,"fromRef":{"id":"refs/heads/test-pr-bbs-11","repository":{"id":10070,"slug":"automation-testing","project":{"key":"SOUR"}}},"toRef":{"id":"refs/heads/master","repository":{"id":10070,"slug":"automation-testing","project":{"key":"SOUR"}}},"locked":false,"reviewers":[]}
+    form: {}
+    headers:
+      Content-Type:
+      - application/json; charset=utf-8
+    url: https://bitbucket.sgdev.org/rest/api/1.0/projects/SOUR/repos/automation-testing/pull-requests
+    method: POST
+  response:
+    body: '{"errors":[{"context":null,"message":"Authentication failed. Please check
+      your credentials and try again.","exceptionName":"com.atlassian.bitbucket.auth.IncorrectPasswordAuthenticationException"}]}'
+    headers:
+      Content-Type:
+      - application/json;charset=UTF-8
+      Date:
+      - Thu, 21 Jul 2022 20:28:53 GMT
+      Server:
+      - Caddy
+      Vary:
+      - accept-encoding
+      X-Arequestid:
+      - '@GMKG7Bx1228x664328x0'
+    status: 401 Unauthorized
+    code: 401
+    duration: ""

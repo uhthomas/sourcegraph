@@ -1,0 +1,59 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "dependencies",
+    srcs = [
+        "consts.go",
+        "iface.go",
+        "init.go",
+        "observability.go",
+        "service.go",
+    ],
+    importpath = "github.com/sourcegraph/sourcegraph/internal/codeintel/dependencies",
+    visibility = ["//:__subpackages__"],
+    deps = [
+        "//internal/api",
+        "//internal/codeintel/dependencies/internal/lockfiles",
+        "//internal/codeintel/dependencies/internal/store",
+        "//internal/codeintel/dependencies/shared",
+        "//internal/codeintel/types",
+        "//internal/conf",
+        "//internal/conf/reposource",
+        "//internal/database",
+        "//internal/env",
+        "//internal/gitserver/gitdomain",
+        "//internal/metrics",
+        "//internal/observation",
+        "//internal/trace",
+        "@com_github_opentracing_opentracing_go//:opentracing-go",
+        "@com_github_opentracing_opentracing_go//log",
+        "@com_github_prometheus_client_golang//prometheus",
+        "@com_github_sourcegraph_log//:log",
+        "@com_github_sourcegraph_sourcegraph_lib//errors",
+        "@org_golang_x_sync//errgroup",
+        "@org_golang_x_sync//semaphore",
+    ],
+)
+
+go_test(
+    name = "dependencies_test",
+    srcs = [
+        "mocks_test.go",
+        "service_test.go",
+    ],
+    embed = [":dependencies"],
+    deps = [
+        "//internal/api",
+        "//internal/codeintel/dependencies/internal/lockfiles",
+        "//internal/codeintel/dependencies/internal/store",
+        "//internal/codeintel/dependencies/shared",
+        "//internal/codeintel/types",
+        "//internal/conf/reposource",
+        "//internal/gitserver/gitdomain",
+        "//internal/observation",
+        "@com_github_derision_test_go_mockgen//testutil/assert",
+        "@com_github_google_go_cmp//cmp",
+        "@com_github_sourcegraph_sourcegraph_lib//errors",
+        "@org_golang_x_sync//semaphore",
+    ],
+)

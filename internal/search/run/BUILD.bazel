@@ -1,0 +1,51 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "run",
+    srcs = [
+        "repo_has_file.go",
+        "repository.go",
+        "run.go",
+    ],
+    importpath = "github.com/sourcegraph/sourcegraph/internal/search/run",
+    visibility = ["//:__subpackages__"],
+    deps = [
+        "//internal/api",
+        "//internal/conf",
+        "//internal/database",
+        "//internal/featureflag",
+        "//internal/search",
+        "//internal/search/job",
+        "//internal/search/limits",
+        "//internal/search/query",
+        "//internal/search/repos",
+        "//internal/search/result",
+        "//internal/search/searchcontexts",
+        "//internal/search/searcher",
+        "//internal/search/streaming",
+        "//internal/search/zoekt",
+        "//internal/trace",
+        "//schema",
+        "@com_github_opentracing_opentracing_go//log",
+        "@com_github_sourcegraph_sourcegraph_lib//errors",
+        "@org_golang_x_sync//errgroup",
+    ],
+)
+
+go_test(
+    name = "run_test",
+    srcs = [
+        "repository_test.go",
+        "run_test.go",
+    ],
+    embed = [":run"],
+    deps = [
+        "//internal/search",
+        "//internal/search/backend",
+        "//internal/search/job",
+        "//internal/search/query",
+        "//internal/search/result",
+        "//internal/types",
+        "@com_github_stretchr_testify//require",
+    ],
+)

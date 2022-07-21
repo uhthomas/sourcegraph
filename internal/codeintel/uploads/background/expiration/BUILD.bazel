@@ -1,0 +1,47 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "expiration",
+    srcs = [
+        "config.go",
+        "expirer.go",
+        "iface.go",
+        "init.go",
+        "observability.go",
+        "upload_expirer.go",
+    ],
+    importpath = "github.com/sourcegraph/sourcegraph/internal/codeintel/uploads/background/expiration",
+    visibility = ["//:__subpackages__"],
+    deps = [
+        "//internal/codeintel/policies/enterprise",
+        "//internal/codeintel/policies/shared",
+        "//internal/codeintel/stores/dbstore",
+        "//internal/codeintel/uploads/shared",
+        "//internal/env",
+        "//internal/goroutine",
+        "//internal/observation",
+        "//internal/timeutil",
+        "@com_github_prometheus_client_golang//prometheus",
+        "@com_github_sourcegraph_log//:log",
+        "@com_github_sourcegraph_sourcegraph_lib//errors",
+    ],
+)
+
+go_test(
+    name = "expiration_test",
+    srcs = [
+        "mocks_test.go",
+        "upload_expirer_test.go",
+    ],
+    embed = [":expiration"],
+    deps = [
+        "//internal/codeintel/policies/enterprise",
+        "//internal/codeintel/policies/shared",
+        "//internal/codeintel/stores/dbstore",
+        "//internal/codeintel/uploads/shared",
+        "//internal/observation",
+        "//internal/timeutil",
+        "@com_github_google_go_cmp//cmp",
+        "@com_github_sourcegraph_log//logtest",
+    ],
+)

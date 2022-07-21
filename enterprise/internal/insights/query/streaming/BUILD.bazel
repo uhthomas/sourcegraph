@@ -1,0 +1,21 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "streaming",
+    srcs = [
+        "decoder.go",
+        "search.go",
+    ],
+    importpath = "github.com/sourcegraph/sourcegraph/enterprise/internal/insights/query/streaming",
+    visibility = ["//enterprise:__subpackages__"],
+    deps = [
+        "//enterprise/internal/compute",
+        "//enterprise/internal/compute/client",
+        "//internal/api/internalapi",
+        "//internal/httpcli",
+        "//internal/search/streaming/api",
+        "//internal/search/streaming/http",
+        "@com_github_opentracing_opentracing_go//:opentracing-go",
+        "@com_github_opentracing_opentracing_go//log",
+    ],
+)

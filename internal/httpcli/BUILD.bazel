@@ -1,0 +1,41 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "httpcli",
+    srcs = [
+        "client.go",
+        "doc.go",
+        "external.go",
+    ],
+    importpath = "github.com/sourcegraph/sourcegraph/internal/httpcli",
+    visibility = ["//:__subpackages__"],
+    deps = [
+        "//internal/actor",
+        "//internal/env",
+        "//internal/lazyregexp",
+        "//internal/metrics",
+        "//internal/rcache",
+        "//internal/requestclient",
+        "//internal/trace/policy",
+        "//schema",
+        "@com_github_gregjones_httpcache//:httpcache",
+        "@com_github_inconshreveable_log15//:log15",
+        "@com_github_opentracing_opentracing_go//:opentracing-go",
+        "@com_github_opentracing_opentracing_go//log",
+        "@com_github_prometheus_client_golang//prometheus",
+        "@com_github_prometheus_client_golang//prometheus/promauto",
+        "@com_github_puerkitobio_rehttp//:rehttp",
+        "@com_github_sourcegraph_sourcegraph_lib//errors",
+    ],
+)
+
+go_test(
+    name = "httpcli_test",
+    srcs = ["client_test.go"],
+    embed = [":httpcli"],
+    deps = [
+        "@com_github_google_go_cmp//cmp",
+        "@com_github_puerkitobio_rehttp//:rehttp",
+        "@com_github_sourcegraph_sourcegraph_lib//errors",
+    ],
+)

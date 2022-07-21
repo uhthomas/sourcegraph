@@ -1,0 +1,46 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "migration",
+    srcs = [
+        "apidocs_search.go",
+        "consts.go",
+        "diagnostics_count.go",
+        "document_column_split.go",
+        "iface.go",
+        "locations_count.go",
+        "migrator.go",
+    ],
+    importpath = "github.com/sourcegraph/sourcegraph/internal/codeintel/stores/lsifstore/migration",
+    visibility = ["//:__subpackages__"],
+    deps = [
+        "//internal/codeintel/stores/lsifstore",
+        "//internal/database/basestore",
+        "//internal/database/batch",
+        "//internal/oobmigration",
+        "@com_github_keegancsmith_sqlf//:sqlf",
+    ],
+)
+
+go_test(
+    name = "migration_test",
+    srcs = [
+        "diagnostics_count_test.go",
+        "document_column_split_test.go",
+        "locations_count_test.go",
+        "migrator_test.go",
+    ],
+    embed = [":migration"],
+    deps = [
+        "//internal/codeintel/stores",
+        "//internal/codeintel/stores/lsifstore",
+        "//internal/conf",
+        "//internal/database/basestore",
+        "//internal/database/dbtest",
+        "//internal/observation",
+        "@com_github_google_go_cmp//cmp",
+        "@com_github_keegancsmith_sqlf//:sqlf",
+        "@com_github_sourcegraph_log//logtest",
+        "@com_github_sourcegraph_sourcegraph_lib//codeintel/precise",
+    ],
+)

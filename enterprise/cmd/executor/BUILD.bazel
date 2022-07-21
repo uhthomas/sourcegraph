@@ -1,0 +1,40 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_binary", "go_library")
+
+go_library(
+    name = "executor_lib",
+    srcs = [
+        "config.go",
+        "main.go",
+    ],
+    importpath = "github.com/sourcegraph/sourcegraph/enterprise/cmd/executor",
+    visibility = ["//visibility:private"],
+    deps = [
+        "//enterprise/cmd/executor/internal/apiclient",
+        "//enterprise/cmd/executor/internal/command",
+        "//enterprise/cmd/executor/internal/ignite",
+        "//enterprise/cmd/executor/internal/janitor",
+        "//enterprise/cmd/executor/internal/worker",
+        "//internal/debugserver",
+        "//internal/env",
+        "//internal/goroutine",
+        "//internal/hostname",
+        "//internal/logging",
+        "//internal/observation",
+        "//internal/src-cli",
+        "//internal/trace",
+        "//internal/version",
+        "//internal/workerutil",
+        "@com_github_google_uuid//:uuid",
+        "@com_github_inconshreveable_log15//:log15",
+        "@com_github_opentracing_opentracing_go//:opentracing-go",
+        "@com_github_prometheus_client_golang//prometheus",
+        "@com_github_sourcegraph_log//:log",
+        "@com_github_sourcegraph_sourcegraph_lib//errors",
+    ],
+)
+
+go_binary(
+    name = "executor",
+    embed = [":executor_lib"],
+    visibility = ["//visibility:public"],
+)

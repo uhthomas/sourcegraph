@@ -1,0 +1,13 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "download",
+    srcs = ["download.go"],
+    importpath = "github.com/sourcegraph/sourcegraph/dev/sg/internal/download",
+    visibility = ["//dev/sg:__subpackages__"],
+    deps = [
+        "//internal/fileutil",
+        "//internal/unpack",
+        "@com_github_sourcegraph_sourcegraph_lib//errors",
+    ],
+)

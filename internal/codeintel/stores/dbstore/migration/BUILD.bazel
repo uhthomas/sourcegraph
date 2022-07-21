@@ -1,0 +1,43 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "migration",
+    srcs = [
+        "committed_at.go",
+        "consts.go",
+        "iface.go",
+        "reference_count.go",
+    ],
+    importpath = "github.com/sourcegraph/sourcegraph/internal/codeintel/stores/dbstore/migration",
+    visibility = ["//:__subpackages__"],
+    deps = [
+        "//internal/codeintel/stores/dbstore",
+        "//internal/database/basestore",
+        "//internal/gitserver/gitdomain",
+        "//internal/oobmigration",
+        "@com_github_keegancsmith_sqlf//:sqlf",
+        "@com_github_sourcegraph_sourcegraph_lib//errors",
+    ],
+)
+
+go_test(
+    name = "migration_test",
+    srcs = [
+        "committed_at_test.go",
+        "mocks_test.go",
+        "reference_count_test.go",
+    ],
+    embed = [":migration"],
+    deps = [
+        "//internal/codeintel/stores/dbstore",
+        "//internal/database",
+        "//internal/database/basestore",
+        "//internal/database/dbtest",
+        "//internal/gitserver/gitdomain",
+        "//internal/observation",
+        "@com_github_google_go_cmp//cmp",
+        "@com_github_keegancsmith_sqlf//:sqlf",
+        "@com_github_sourcegraph_log//logtest",
+        "@com_github_sourcegraph_sourcegraph_lib//errors",
+    ],
+)

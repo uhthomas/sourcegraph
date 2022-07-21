@@ -1,0 +1,59 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "lockfiles",
+    srcs = [
+        "dependency_graph.go",
+        "errors.go",
+        "go.go",
+        "iface.go",
+        "init.go",
+        "npm.go",
+        "observability.go",
+        "parser.go",
+        "pipfile.go",
+        "poetry.go",
+        "service.go",
+        "yarn.go",
+    ],
+    importpath = "github.com/sourcegraph/sourcegraph/internal/codeintel/dependencies/internal/lockfiles",
+    visibility = ["//:__subpackages__"],
+    deps = [
+        "//internal/api",
+        "//internal/conf/reposource",
+        "//internal/gitserver",
+        "//internal/lazyregexp",
+        "//internal/metrics",
+        "//internal/observation",
+        "//internal/trace",
+        "@com_github_burntsushi_toml//:toml",
+        "@com_github_opentracing_opentracing_go//:opentracing-go",
+        "@com_github_opentracing_opentracing_go//log",
+        "@com_github_prometheus_client_golang//prometheus",
+        "@com_github_sourcegraph_log//:log",
+        "@com_github_sourcegraph_sourcegraph_lib//errors",
+        "@org_golang_x_mod//modfile",
+    ],
+)
+
+go_test(
+    name = "lockfiles_test",
+    srcs = [
+        "dependency_graph_test.go",
+        "go_test.go",
+        "mocks_test.go",
+        "parser_test.go",
+        "service_test.go",
+        "yarn_test.go",
+    ],
+    data = glob(["testdata/**"]),
+    embed = [":lockfiles"],
+    deps = [
+        "//internal/api",
+        "//internal/conf/reposource",
+        "//internal/gitserver",
+        "//internal/unpack/unpacktest",
+        "@com_github_google_go_cmp//cmp",
+        "@com_github_sebdah_goldie_v2//:goldie",
+    ],
+)

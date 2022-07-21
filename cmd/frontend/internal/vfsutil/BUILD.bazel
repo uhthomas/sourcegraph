@@ -1,0 +1,37 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "vfsutil",
+    srcs = [
+        "archive.go",
+        "cache.go",
+        "github_archive.go",
+        "zip.go",
+    ],
+    importpath = "github.com/sourcegraph/sourcegraph/cmd/frontend/internal/vfsutil",
+    visibility = ["//cmd/frontend:__subpackages__"],
+    deps = [
+        "//internal/diskcache",
+        "//internal/httpcli",
+        "//internal/lazyregexp",
+        "//internal/metrics",
+        "//internal/trace/ot",
+        "@com_github_opentracing_opentracing_go//ext",
+        "@com_github_prometheus_client_golang//prometheus",
+        "@com_github_prometheus_client_golang//prometheus/promauto",
+        "@com_github_sourcegraph_ctxvfs//:ctxvfs",
+        "@com_github_sourcegraph_sourcegraph_lib//errors",
+        "@org_golang_x_tools//godoc/vfs",
+        "@org_golang_x_tools//godoc/vfs/zipfs",
+    ],
+)
+
+go_test(
+    name = "vfsutil_test",
+    srcs = [
+        "github_archive_test.go",
+        "vfs_test.go",
+    ],
+    embed = [":vfsutil"],
+    deps = ["@com_github_sourcegraph_ctxvfs//:ctxvfs"],
+)

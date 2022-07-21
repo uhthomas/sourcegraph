@@ -1,0 +1,31 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "janitor",
+    srcs = [
+        "iface.go",
+        "observability.go",
+        "resetters.go",
+    ],
+    importpath = "github.com/sourcegraph/sourcegraph/enterprise/cmd/worker/internal/codeintel/janitor",
+    visibility = ["//enterprise/cmd/worker:__subpackages__"],
+    deps = [
+        "//internal/codeintel/stores/dbstore",
+        "//internal/codeintel/stores/lsifstore",
+        "//internal/database/basestore",
+        "//internal/observation",
+        "//internal/workerutil/dbworker",
+        "//internal/workerutil/dbworker/store",
+        "@com_github_prometheus_client_golang//prometheus",
+    ],
+)
+
+go_test(
+    name = "janitor_test",
+    srcs = ["mocks_test.go"],
+    embed = [":janitor"],
+    deps = [
+        "//internal/codeintel/stores/dbstore",
+        "//internal/database/basestore",
+    ],
+)

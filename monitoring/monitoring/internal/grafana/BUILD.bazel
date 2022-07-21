@@ -1,0 +1,12 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "grafana",
+    srcs = [
+        "alerts-defined.go",
+        "grafana.go",
+    ],
+    importpath = "github.com/sourcegraph/sourcegraph/monitoring/monitoring/internal/grafana",
+    visibility = ["//monitoring/monitoring:__subpackages__"],
+    deps = ["@com_github_grafana_tools_sdk//:sdk"],
+)

@@ -1,0 +1,36 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "uploads",
+    srcs = [
+        "iface.go",
+        "init.go",
+        "observability.go",
+        "service.go",
+    ],
+    importpath = "github.com/sourcegraph/sourcegraph/internal/codeintel/uploads",
+    visibility = ["//:__subpackages__"],
+    deps = [
+        "//internal/codeintel/stores",
+        "//internal/codeintel/uploads/internal/lsifstore",
+        "//internal/codeintel/uploads/internal/store",
+        "//internal/codeintel/uploads/shared",
+        "//internal/conf",
+        "//internal/conf/conftypes",
+        "//internal/database",
+        "//internal/database/basestore",
+        "//internal/database/connections/live",
+        "//internal/database/locker",
+        "//internal/gitserver",
+        "//internal/gitserver/gitdomain",
+        "//internal/metrics",
+        "//internal/observation",
+        "//internal/trace",
+        "@com_github_opentracing_opentracing_go//:opentracing-go",
+        "@com_github_opentracing_opentracing_go//log",
+        "@com_github_prometheus_client_golang//prometheus",
+        "@com_github_sourcegraph_log//:log",
+        "@com_github_sourcegraph_sourcegraph_lib//codeintel/precise",
+        "@com_github_sourcegraph_sourcegraph_lib//errors",
+    ],
+)

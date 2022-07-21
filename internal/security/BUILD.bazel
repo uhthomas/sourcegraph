@@ -1,0 +1,13 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "security",
+    srcs = ["security.go"],
+    importpath = "github.com/sourcegraph/sourcegraph/internal/security",
+    visibility = ["//:__subpackages__"],
+    deps = [
+        "//internal/conf",
+        "//internal/errcode",
+        "@com_github_sourcegraph_sourcegraph_lib//errors",
+    ],
+)

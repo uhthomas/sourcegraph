@@ -1,0 +1,39 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "notebooks",
+    srcs = [
+        "store.go",
+        "types.go",
+        "validate.go",
+    ],
+    importpath = "github.com/sourcegraph/sourcegraph/enterprise/internal/notebooks",
+    visibility = ["//enterprise:__subpackages__"],
+    deps = [
+        "//internal/actor",
+        "//internal/database",
+        "//internal/database/basestore",
+        "//internal/database/dbutil",
+        "//internal/lazyregexp",
+        "@com_github_keegancsmith_sqlf//:sqlf",
+        "@com_github_sourcegraph_sourcegraph_lib//errors",
+    ],
+)
+
+go_test(
+    name = "notebooks_test",
+    srcs = [
+        "store_test.go",
+        "types_test.go",
+        "validate_test.go",
+    ],
+    embed = [":notebooks"],
+    deps = [
+        "//internal/actor",
+        "//internal/database",
+        "//internal/database/dbtest",
+        "@com_github_hexops_autogold//:autogold",
+        "@com_github_sourcegraph_log//logtest",
+        "@com_github_sourcegraph_sourcegraph_lib//errors",
+    ],
+)

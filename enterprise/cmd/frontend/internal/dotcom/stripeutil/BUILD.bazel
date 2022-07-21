@@ -1,0 +1,13 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "stripeutil",
+    srcs = ["stripe.go"],
+    importpath = "github.com/sourcegraph/sourcegraph/enterprise/cmd/frontend/internal/dotcom/stripeutil",
+    visibility = ["//enterprise/cmd/frontend:__subpackages__"],
+    deps = [
+        "//cmd/frontend/external/app",
+        "//internal/env",
+        "@com_github_stripe_stripe_go//:stripe-go",
+    ],
+)

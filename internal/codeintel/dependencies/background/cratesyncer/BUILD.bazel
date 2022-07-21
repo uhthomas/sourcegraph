@@ -1,0 +1,27 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "cratesyncer",
+    srcs = ["init.go"],
+    importpath = "github.com/sourcegraph/sourcegraph/internal/codeintel/dependencies/background/cratesyncer",
+    visibility = ["//:__subpackages__"],
+    deps = [
+        "//internal/api",
+        "//internal/codeintel/dependencies",
+        "//internal/codeintel/stores/dbstore",
+        "//internal/database",
+        "//internal/extsvc",
+        "//internal/gitserver",
+        "//internal/goroutine",
+        "//internal/jsonc",
+        "//internal/observation",
+        "//internal/trace",
+        "//internal/types",
+        "//schema",
+        "@com_github_json_iterator_go//:go",
+        "@com_github_opentracing_opentracing_go//:opentracing-go",
+        "@com_github_prometheus_client_golang//prometheus",
+        "@com_github_sourcegraph_sourcegraph_lib//codeintel/precise",
+        "@com_github_sourcegraph_sourcegraph_lib//errors",
+    ],
+)

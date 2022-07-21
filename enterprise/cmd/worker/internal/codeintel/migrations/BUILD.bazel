@@ -1,0 +1,19 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "migrations",
+    srcs = [
+        "config.go",
+        "register.go",
+    ],
+    importpath = "github.com/sourcegraph/sourcegraph/enterprise/cmd/worker/internal/codeintel/migrations",
+    visibility = ["//enterprise/cmd/worker:__subpackages__"],
+    deps = [
+        "//cmd/worker/shared/init/codeintel",
+        "//internal/codeintel/stores/dbstore/migration",
+        "//internal/codeintel/stores/lsifstore/migration",
+        "//internal/database",
+        "//internal/env",
+        "//internal/oobmigration",
+    ],
+)

@@ -1,0 +1,36 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "lsifstore",
+    srcs = [
+        "lsifstore.go",
+        "lsifstore_delete.go",
+        "observability.go",
+    ],
+    importpath = "github.com/sourcegraph/sourcegraph/internal/codeintel/uploads/internal/lsifstore",
+    visibility = ["//:__subpackages__"],
+    deps = [
+        "//internal/database",
+        "//internal/database/basestore",
+        "//internal/metrics",
+        "//internal/observation",
+        "@com_github_keegancsmith_sqlf//:sqlf",
+        "@com_github_opentracing_opentracing_go//log",
+    ],
+)
+
+go_test(
+    name = "lsifstore_test",
+    srcs = ["lsifstore_delete_test.go"],
+    embed = [":lsifstore"],
+    deps = [
+        "//internal/database",
+        "//internal/database/basestore",
+        "//internal/database/dbtest",
+        "//internal/observation",
+        "@com_github_google_go_cmp//cmp",
+        "@com_github_keegancsmith_sqlf//:sqlf",
+        "@com_github_sourcegraph_log//:log",
+        "@com_github_sourcegraph_log//logtest",
+    ],
+)

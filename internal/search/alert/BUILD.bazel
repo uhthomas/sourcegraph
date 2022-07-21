@@ -1,0 +1,40 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "alert",
+    srcs = ["observer.go"],
+    importpath = "github.com/sourcegraph/sourcegraph/internal/search/alert",
+    visibility = ["//:__subpackages__"],
+    deps = [
+        "//cmd/frontend/backend",
+        "//cmd/frontend/envvar",
+        "//internal/authz",
+        "//internal/comby",
+        "//internal/database",
+        "//internal/extsvc",
+        "//internal/gitserver/gitdomain",
+        "//internal/search",
+        "//internal/search/query",
+        "//internal/search/repos",
+        "//internal/search/run",
+        "//internal/search/searchcontexts",
+        "@com_github_sourcegraph_log//:log",
+        "@com_github_sourcegraph_sourcegraph_lib//errors",
+    ],
+)
+
+go_test(
+    name = "alert_test",
+    srcs = ["observer_test.go"],
+    embed = [":alert"],
+    deps = [
+        "//internal/database",
+        "//internal/search",
+        "//internal/search/query",
+        "//internal/search/run",
+        "//schema",
+        "@com_github_sourcegraph_log//logtest",
+        "@com_github_sourcegraph_sourcegraph_lib//errors",
+        "@com_github_stretchr_testify//require",
+    ],
+)

@@ -1,0 +1,25 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "middleware",
+    srcs = [
+        "blackhole.go",
+        "doc.go",
+        "goimportpath.go",
+        "trace.go",
+    ],
+    importpath = "github.com/sourcegraph/sourcegraph/cmd/frontend/internal/cli/middleware",
+    visibility = ["//cmd/frontend:__subpackages__"],
+    deps = [
+        "//cmd/frontend/globals",
+        "//internal/env",
+        "//internal/trace",
+        "@com_github_sourcegraph_sourcegraph_lib//errors",
+    ],
+)
+
+go_test(
+    name = "middleware_test",
+    srcs = ["goimportpath_test.go"],
+    deps = [":middleware"],
+)

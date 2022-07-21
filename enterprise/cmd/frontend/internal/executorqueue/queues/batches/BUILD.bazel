@@ -1,0 +1,52 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "batches",
+    srcs = [
+        "queue.go",
+        "transform.go",
+    ],
+    importpath = "github.com/sourcegraph/sourcegraph/enterprise/cmd/frontend/internal/executorqueue/queues/batches",
+    visibility = ["//enterprise/cmd/frontend:__subpackages__"],
+    deps = [
+        "//cmd/frontend/graphqlbackend",
+        "//enterprise/cmd/frontend/internal/executorqueue/handler",
+        "//enterprise/internal/batches/store",
+        "//enterprise/internal/batches/types",
+        "//enterprise/internal/executor",
+        "//internal/actor",
+        "//internal/database",
+        "//internal/observation",
+        "//internal/workerutil",
+        "@com_github_sourcegraph_log//:log",
+        "@com_github_sourcegraph_sourcegraph_lib//batches",
+        "@com_github_sourcegraph_sourcegraph_lib//batches/template",
+        "@com_github_sourcegraph_sourcegraph_lib//errors",
+    ],
+)
+
+go_test(
+    name = "batches_test",
+    srcs = [
+        "mocks_test.go",
+        "transform_test.go",
+    ],
+    embed = [":batches"],
+    deps = [
+        "//cmd/frontend/graphqlbackend",
+        "//enterprise/internal/batches/store",
+        "//enterprise/internal/batches/types",
+        "//enterprise/internal/executor",
+        "//internal/api",
+        "//internal/conf",
+        "//internal/database",
+        "//internal/types",
+        "//schema",
+        "@com_github_google_go_cmp//cmp",
+        "@com_github_sourcegraph_log//:log",
+        "@com_github_sourcegraph_log//logtest",
+        "@com_github_sourcegraph_sourcegraph_lib//batches",
+        "@com_github_sourcegraph_sourcegraph_lib//batches/execution",
+        "@com_github_sourcegraph_sourcegraph_lib//batches/template",
+    ],
+)

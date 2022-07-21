@@ -1,0 +1,30 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+load("@bazel_gazelle//:def.bzl", "gazelle")
+
+# gazelle:proto disable
+# gazelle:prefix github.com/sourcegraph/sourcegraph
+gazelle(
+    name = "gazelle",
+    external = "static",
+)
+
+gazelle(
+    name = "gazelle-update-repos",
+    args = [
+        "--build_file_proto_mode=disable",
+        "--from_file=go.mod",
+        "--prune",
+        "--to_macro=go_repos.bzl%go_repositories",
+    ],
+    command = "update-repos",
+)
+
+go_library(
+    name = "sourcegraph",
+    srcs = [
+        "doc.go",
+        "gen.go",
+    ],
+    importpath = "github.com/sourcegraph/sourcegraph",
+    visibility = ["//visibility:public"],
+)

@@ -1,0 +1,17 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "mocks",
+    srcs = ["mocks_temp.go"],
+    importpath = "github.com/sourcegraph/sourcegraph/enterprise/cmd/frontend/internal/codeintel/resolvers/mocks",
+    visibility = ["//enterprise/cmd/frontend:__subpackages__"],
+    deps = [
+        "//cmd/frontend/graphqlbackend",
+        "//enterprise/cmd/frontend/internal/codeintel/resolvers",
+        "//internal/api",
+        "//internal/codeintel/stores/dbstore",
+        "//internal/codeintel/stores/lsifstore",
+        "//internal/services/executors/transport/graphql",
+        "@com_github_sourcegraph_sourcegraph_lib//codeintel/autoindex/config",
+    ],
+)

@@ -1,0 +1,27 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "monitoring",
+    srcs = [
+        "dashboards.go",
+        "doc.go",
+        "documentation.go",
+        "generator.go",
+        "monitoring.go",
+        "panel.go",
+        "panel_options.go",
+        "prometheus.go",
+        "prune.go",
+        "util.go",
+    ],
+    importpath = "github.com/sourcegraph/sourcegraph/monitoring/monitoring",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//monitoring/monitoring/internal/grafana",
+        "@com_github_grafana_tools_sdk//:sdk",
+        "@com_github_inconshreveable_log15//:log15",
+        "@com_github_prometheus_common//model",
+        "@com_github_sourcegraph_sourcegraph_lib//errors",
+        "@in_gopkg_yaml_v2//:yaml_v2",
+    ],
+)

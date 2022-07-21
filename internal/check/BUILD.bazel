@@ -1,0 +1,12 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "check",
+    srcs = ["check.go"],
+    importpath = "github.com/sourcegraph/sourcegraph/internal/check",
+    visibility = ["//:__subpackages__"],
+    deps = [
+        "//internal/api/internalapi",
+        "//internal/httpcli",
+    ],
+)

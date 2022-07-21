@@ -1,0 +1,34 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "usagestatsdeprecated",
+    srcs = [
+        "action_handlers.go",
+        "doc.go",
+        "usage_stats.go",
+        "util.go",
+    ],
+    importpath = "github.com/sourcegraph/sourcegraph/cmd/frontend/internal/usagestatsdeprecated",
+    visibility = ["//cmd/frontend:__subpackages__"],
+    deps = [
+        "//internal/database",
+        "//internal/featureflag",
+        "//internal/redispool",
+        "//internal/types",
+        "@com_github_gomodule_redigo//redis",
+        "@com_github_inconshreveable_log15//:log15",
+        "@com_github_sourcegraph_sourcegraph_lib//errors",
+    ],
+)
+
+go_test(
+    name = "usagestatsdeprecated_test",
+    srcs = ["usage_stats_test.go"],
+    embed = [":usagestatsdeprecated"],
+    deps = [
+        "//internal/types",
+        "@com_github_gomodule_redigo//redis",
+        "@com_github_sourcegraph_sourcegraph_lib//errors",
+        "@com_github_stvp_tempredis//:tempredis",
+    ],
+)

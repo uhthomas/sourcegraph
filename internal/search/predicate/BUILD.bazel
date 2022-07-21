@@ -1,0 +1,33 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "predicate",
+    srcs = ["substitute.go"],
+    importpath = "github.com/sourcegraph/sourcegraph/internal/search/predicate",
+    visibility = ["//:__subpackages__"],
+    deps = [
+        "//internal/search/job",
+        "//internal/search/job/jobutil",
+        "//internal/search/query",
+        "//internal/search/result",
+        "//internal/search/run",
+        "//internal/search/streaming",
+        "//internal/trace",
+        "@com_github_grafana_regexp//:regexp",
+        "@com_github_sourcegraph_sourcegraph_lib//errors",
+        "@org_golang_x_sync//errgroup",
+    ],
+)
+
+go_test(
+    name = "predicate_test",
+    srcs = ["substitute_test.go"],
+    embed = [":predicate"],
+    deps = [
+        "//internal/search/query",
+        "//internal/search/result",
+        "//internal/types",
+        "@com_github_hexops_autogold//:autogold",
+        "@com_github_stretchr_testify//require",
+    ],
+)

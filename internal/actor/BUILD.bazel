@@ -1,0 +1,30 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "actor",
+    srcs = [
+        "actor.go",
+        "http.go",
+    ],
+    importpath = "github.com/sourcegraph/sourcegraph/internal/actor",
+    visibility = ["//:__subpackages__"],
+    deps = [
+        "//internal/cookie",
+        "//internal/trace",
+        "//internal/types",
+        "@com_github_inconshreveable_log15//:log15",
+        "@com_github_prometheus_client_golang//prometheus",
+        "@com_github_prometheus_client_golang//prometheus/promauto",
+        "@com_github_sourcegraph_sourcegraph_lib//errors",
+    ],
+)
+
+go_test(
+    name = "actor_test",
+    srcs = ["http_test.go"],
+    embed = [":actor"],
+    deps = [
+        "@com_github_google_go_cmp//cmp",
+        "@com_github_stretchr_testify//require",
+    ],
+)

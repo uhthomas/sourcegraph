@@ -1,0 +1,44 @@
+test --test_output=errors
+common --repo_env=BAZEL_USE_CPP_ONLY_TOOLCHAIN=1
+
+common --experimental_guard_against_concurrent_changes
+
+# Cache optimisations.
+build --experimental_action_cache_store_output_metadata
+build --experimental_remote_cache_async
+# The Bazel remote cache needs to be upgraded to support compression. Though in
+# limited testing, it may make things slower in some cases.
+#build --experimental_remote_cache_compression
+build --experimental_remote_merkle_tree_cache
+# 0 = Unlimited.
+build --experimental_remote_merkle_tree_cache_size=0
+# Unfortunately _minimal and _toplevel are just too unstable.
+# build --remote_download_toplevel
+
+# Recommended settings from https://blog.aspect.dev/bazelrc-flags.
+build --experimental_inprocess_symlink_creation
+build --heap_dump_on_oom
+build --incompatible_default_to_explicit_init_py
+build --incompatible_remote_build_event_upload_respect_no_cache
+build --incompatible_remote_results_ignore_disk
+build --incompatible_strict_action_env
+# Only available in Bazel 6 (unreleased).
+# build --noexperimental_check_external_repository_files
+build --noexperimental_check_output_files
+build --nolegacy_external_runfiles
+build --nosandbox_default_allow_network
+build --remote_local_fallback
+fetch --noexperimental_check_output_files
+# Only available in Bazel 6 (unreleased).
+# fetch --noexperimental_check_external_repository_files
+query --noexperimental_check_output_files
+# Only available in Bazel 6 (unreleased).
+# query --noexperimental_check_external_repository_files
+startup --host_jvm_args=-DBAZEL_TRACK_SOURCE_DIRECTORIES=1
+test --incompatible_exclusive_test_sandboxed
+# Execution time is wrong for cached tests.
+# See https://github.com/bazelbuild/bazel/issues/13103.
+# test --test_verbose_timeout_warnings
+
+build --experimental_repository_cache_urls_as_default_canonical_id
+fetch --experimental_repository_cache_urls_as_default_canonical_id

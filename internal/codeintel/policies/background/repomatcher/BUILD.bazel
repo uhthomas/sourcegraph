@@ -1,0 +1,30 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "repomatcher",
+    srcs = [
+        "config.go",
+        "iface.go",
+        "init.go",
+        "matcher.go",
+        "observability.go",
+        "repository_pattern_matcher.go",
+    ],
+    importpath = "github.com/sourcegraph/sourcegraph/internal/codeintel/policies/background/repomatcher",
+    visibility = ["//:__subpackages__"],
+    deps = [
+        "//internal/codeintel/stores/dbstore",
+        "//internal/conf",
+        "//internal/env",
+        "//internal/goroutine",
+        "//internal/observation",
+        "@com_github_prometheus_client_golang//prometheus",
+    ],
+)
+
+go_test(
+    name = "repomatcher_test",
+    srcs = ["mocks_test.go"],
+    embed = [":repomatcher"],
+    deps = ["//internal/codeintel/stores/dbstore"],
+)

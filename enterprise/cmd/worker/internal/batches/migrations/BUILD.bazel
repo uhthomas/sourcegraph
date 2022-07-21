@@ -1,0 +1,56 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "migrations",
+    srcs = [
+        "migrations.go",
+        "site_credential_migrator.go",
+        "ssh_migrator.go",
+        "user_credential_migrator.go",
+    ],
+    importpath = "github.com/sourcegraph/sourcegraph/enterprise/cmd/worker/internal/batches/migrations",
+    visibility = ["//enterprise/cmd/worker:__subpackages__"],
+    deps = [
+        "//enterprise/internal/batches/store",
+        "//enterprise/internal/batches/types",
+        "//internal/database",
+        "//internal/database/basestore",
+        "//internal/encryption",
+        "//internal/encryption/keyring",
+        "//internal/extsvc/auth",
+        "//internal/observation",
+        "//internal/oobmigration",
+        "//internal/trace",
+        "@com_github_inconshreveable_log15//:log15",
+        "@com_github_keegancsmith_sqlf//:sqlf",
+        "@com_github_opentracing_opentracing_go//:opentracing-go",
+        "@com_github_prometheus_client_golang//prometheus",
+        "@com_github_sourcegraph_log//:log",
+        "@com_github_sourcegraph_sourcegraph_lib//errors",
+    ],
+)
+
+go_test(
+    name = "migrations_test",
+    srcs = [
+        "site_credential_migrator_test.go",
+        "ssh_migrator_test.go",
+        "user_credential_migrator_test.go",
+    ],
+    embed = [":migrations"],
+    deps = [
+        "//enterprise/internal/batches/store",
+        "//enterprise/internal/batches/testing",
+        "//enterprise/internal/batches/types",
+        "//internal/actor",
+        "//internal/database",
+        "//internal/database/dbtest",
+        "//internal/encryption/testing",
+        "//internal/extsvc",
+        "//internal/extsvc/auth",
+        "//internal/observation",
+        "@com_github_google_go_cmp//cmp",
+        "@com_github_keegancsmith_sqlf//:sqlf",
+        "@com_github_sourcegraph_log//logtest",
+    ],
+)

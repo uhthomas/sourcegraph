@@ -1,0 +1,9 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "testing",
+    srcs = ["key.go"],
+    importpath = "github.com/sourcegraph/sourcegraph/internal/encryption/testing",
+    visibility = ["//:__subpackages__"],
+    deps = ["//internal/encryption"],
+)

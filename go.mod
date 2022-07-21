@@ -8,7 +8,7 @@ require (
 	cloud.google.com/go/profiler v0.2.0
 	cloud.google.com/go/pubsub v1.17.1
 	cloud.google.com/go/secretmanager v1.4.0
-	cloud.google.com/go/storage v1.22.0
+	cloud.google.com/go/storage v1.22.1
 	github.com/BurntSushi/toml v1.1.0
 	github.com/Masterminds/semver v1.5.0
 	github.com/NYTimes/gziphandler v1.1.1
@@ -16,15 +16,17 @@ require (
 	github.com/RoaringBitmap/roaring v0.9.4
 	github.com/agext/levenshtein v1.2.3
 	github.com/amit7itz/goset v1.0.1
-	github.com/aws/aws-sdk-go-v2 v1.13.0
+	github.com/aws/aws-sdk-go-v2 v1.16.7
 	github.com/aws/aws-sdk-go-v2/config v1.13.1
 	github.com/aws/aws-sdk-go-v2/credentials v1.8.0
 	github.com/aws/aws-sdk-go-v2/feature/s3/manager v1.9.1
 	github.com/aws/aws-sdk-go-v2/service/cloudwatch v1.15.0
 	github.com/aws/aws-sdk-go-v2/service/codecommit v1.11.0
+	github.com/aws/aws-sdk-go-v2/service/ec2 v1.49.1
+	github.com/aws/aws-sdk-go-v2/service/eks v1.21.4
 	github.com/aws/aws-sdk-go-v2/service/kms v1.14.0
 	github.com/aws/aws-sdk-go-v2/service/s3 v1.24.1
-	github.com/aws/smithy-go v1.11.0
+	github.com/aws/smithy-go v1.12.0
 	github.com/beevik/etree v1.1.0
 	github.com/boj/redistore v0.0.0-20180917114910-cd5dcc76aeff
 	github.com/buildkite/go-buildkite/v3 v3.0.1
@@ -43,6 +45,7 @@ require (
 	github.com/distribution/distribution/v3 v3.0.0-20220128175647-b60926597a1b
 	github.com/dnaeon/go-vcr v1.2.0
 	github.com/docker/docker-credential-helpers v0.6.4
+	github.com/drexedam/gravatar v0.0.0-20210327211422-e94eea8c338e
 	github.com/fatih/color v1.13.0
 	github.com/felixge/fgprof v0.9.2
 	github.com/felixge/httpsnoop v1.0.2
@@ -114,6 +117,7 @@ require (
 	github.com/opencontainers/go-digest v1.0.0
 	github.com/opentracing-contrib/go-stdlib v1.0.0
 	github.com/opentracing/opentracing-go v1.2.0
+	github.com/ozankasikci/go-image-merge v0.2.2
 	github.com/peterbourgon/ff v1.7.1
 	github.com/peterbourgon/ff/v3 v3.1.2
 	github.com/peterhellberg/link v1.1.0
@@ -147,7 +151,7 @@ require (
 	github.com/sourcegraph/run v0.9.0
 	github.com/sourcegraph/scip v0.1.0
 	github.com/sourcegraph/sourcegraph/enterprise/dev/ci/images v0.0.0-20220203145655-4d2a39d3038a
-	github.com/sourcegraph/sourcegraph/lib v0.0.0-20220511160847-5a43d3ea24eb
+	github.com/sourcegraph/sourcegraph/lib v0.0.0-20220721165634-9a0f825568e6
 	github.com/stretchr/testify v1.7.2
 	github.com/stripe/stripe-go v70.15.0+incompatible
 	github.com/stvp/tempredis v0.0.0-20181119212430-b82af8480203
@@ -176,15 +180,15 @@ require (
 	go.uber.org/ratelimit v0.2.0
 	go.uber.org/zap v1.21.0
 	golang.org/x/crypto v0.0.0-20220517005047-85d78b3ac167
-	golang.org/x/net v0.0.0-20220526153639-5463443f8c37
-	golang.org/x/oauth2 v0.0.0-20220411215720-9780585627b5
-	golang.org/x/sync v0.0.0-20210220032951-036812b2e83c
+	golang.org/x/net v0.0.0-20220617184016-355a448f1bc9
+	golang.org/x/oauth2 v0.0.0-20220622183110-fd043fe589d2
+	golang.org/x/sync v0.0.0-20220601150217-0de741cfad7f
 	golang.org/x/sys v0.0.0-20220712014510-0a85c31ab51e
 	golang.org/x/time v0.0.0-20220411224347-583f2d630306
 	golang.org/x/tools v0.1.10
 	gonum.org/v1/gonum v0.11.0
-	google.golang.org/api v0.77.0
-	google.golang.org/genproto v0.0.0-20220502173005-c8bf987b8c21
+	google.golang.org/api v0.85.0
+	google.golang.org/genproto v0.0.0-20220617124728-180714bec0ad
 	google.golang.org/protobuf v1.28.0
 	gopkg.in/natefinch/lumberjack.v2 v2.0.0
 	gopkg.in/yaml.v2 v2.4.0
@@ -198,10 +202,12 @@ require (
 	sigs.k8s.io/yaml v1.3.0
 )
 
+require github.com/googleapis/enterprise-certificate-proxy v0.1.0 // indirect
+
 require (
 	bitbucket.org/creachadair/shell v0.0.7 // indirect
-	cloud.google.com/go v0.101.0 // indirect
-	cloud.google.com/go/compute v1.6.1 // indirect
+	cloud.google.com/go v0.102.1 // indirect
+	cloud.google.com/go/compute v1.7.0 // indirect
 	cloud.google.com/go/iam v0.3.0 // indirect
 	github.com/Azure/go-ansiterm v0.0.0-20210617225240-d185dfc1b5a1 // indirect
 	github.com/Masterminds/goutils v1.1.1 // indirect
@@ -220,11 +226,11 @@ require (
 	github.com/aws/aws-sdk-go v1.42.45 // indirect
 	github.com/aws/aws-sdk-go-v2/aws/protocol/eventstream v1.2.0 // indirect
 	github.com/aws/aws-sdk-go-v2/feature/ec2/imds v1.10.0 // indirect
-	github.com/aws/aws-sdk-go-v2/internal/configsources v1.1.4 // indirect
-	github.com/aws/aws-sdk-go-v2/internal/endpoints/v2 v2.2.0 // indirect
+	github.com/aws/aws-sdk-go-v2/internal/configsources v1.1.14 // indirect
+	github.com/aws/aws-sdk-go-v2/internal/endpoints/v2 v2.4.8 // indirect
 	github.com/aws/aws-sdk-go-v2/internal/ini v1.3.5 // indirect
 	github.com/aws/aws-sdk-go-v2/service/internal/accept-encoding v1.7.0 // indirect
-	github.com/aws/aws-sdk-go-v2/service/internal/presigned-url v1.7.0 // indirect
+	github.com/aws/aws-sdk-go-v2/service/internal/presigned-url v1.9.8 // indirect
 	github.com/aws/aws-sdk-go-v2/service/internal/s3shared v1.11.0 // indirect
 	github.com/aws/aws-sdk-go-v2/service/sso v1.9.0 // indirect
 	github.com/aws/aws-sdk-go-v2/service/sts v1.14.0 // indirect
@@ -237,7 +243,7 @@ require (
 	github.com/cenkalti/backoff/v4 v4.1.3 // indirect
 	github.com/certifi/gocertifi v0.0.0-20210507211836-431795d63e8d // indirect
 	github.com/charmbracelet/glamour v0.5.0 // indirect
-	github.com/cockroachdb/errors v1.9.0 // indirect
+	github.com/cockroachdb/errors v1.9.0
 	github.com/cockroachdb/logtags v0.0.0-20211118104740-dabe8e521a4f // indirect
 	github.com/cockroachdb/redact v1.1.3
 	github.com/containerd/typeurl v1.0.2 // indirect
@@ -283,9 +289,8 @@ require (
 	github.com/google/go-github/v41 v41.0.0
 	github.com/google/gofuzz v1.2.0 // indirect
 	github.com/google/pprof v0.0.0-20220412212628-83db2b799d1f // indirect
-	github.com/googleapis/gax-go/v2 v2.3.0 // indirect
+	github.com/googleapis/gax-go/v2 v2.4.0 // indirect
 	github.com/googleapis/gnostic v0.6.6 // indirect
-	github.com/googleapis/go-type-adapters v1.0.0 // indirect
 	github.com/gopherjs/gopherjs v0.0.0-20220104163920-15ed2e8cf2bd // indirect
 	github.com/gopherjs/gopherwasm v1.1.0 // indirect
 	github.com/gorilla/css v1.0.0 // indirect
@@ -385,7 +390,7 @@ require (
 	github.com/xeipuuv/gojsonpointer v0.0.0-20190905194746-02993c407bfb // indirect
 	github.com/xeipuuv/gojsonreference v0.0.0-20180127040603-bd5ef7bd5415 // indirect
 	github.com/xlab/treeprint v1.1.0 // indirect
-	github.com/yuin/goldmark v1.4.4 // indirect
+	github.com/yuin/goldmark v1.4.4
 	github.com/yuin/goldmark-emoji v1.0.1 // indirect
 	github.com/zenazn/goji v1.0.1 // indirect
 	go.mongodb.org/mongo-driver v1.8.3 // indirect
@@ -397,9 +402,9 @@ require (
 	golang.org/x/mod v0.6.0-dev.0.20220106191415-9b9b3d81d5e3
 	golang.org/x/term v0.0.0-20220411215600-e5f449aeb171 // indirect
 	golang.org/x/text v0.3.7 // indirect
-	golang.org/x/xerrors v0.0.0-20220517211312-f3a8303e98df // indirect
+	golang.org/x/xerrors v0.0.0-20220609144429-65e65417b02f // indirect
 	google.golang.org/appengine v1.6.7 // indirect
-	google.golang.org/grpc v1.46.2 // indirect
+	google.golang.org/grpc v1.47.0 // indirect
 	gopkg.in/alexcesaro/statsd.v2 v2.0.0 // indirect
 	gopkg.in/inf.v0 v0.9.1 // indirect
 	gopkg.in/square/go-jose.v2 v2.6.0 // indirect
@@ -421,12 +426,12 @@ replace (
 	// We use a fork of Alertmanager to allow prom-wrapper to better manipulate Alertmanager configuration.
 	// See https://docs.sourcegraph.com/dev/background-information/observability/prometheus
 	github.com/prometheus/alertmanager => github.com/sourcegraph/alertmanager v0.21.1-0.20211110092431-863f5b1ee51b
-	// We publish 'enterprise/dev/ci/images' as a package for import in other tooling.
-	// When developing Sourcegraph itself, this replace uses the local package instead of a pushed version.
-	github.com/sourcegraph/sourcegraph/enterprise/dev/ci/images => ./enterprise/dev/ci/images
-	// We publish 'lib' as a package for import in other tooling.
-	// When developing Sourcegraph itself, this replace uses the local package instead of a pushed version.
-	github.com/sourcegraph/sourcegraph/lib => ./lib
+// We publish 'enterprise/dev/ci/images' as a package for import in other tooling.
+// When developing Sourcegraph itself, this replace uses the local package instead of a pushed version.
+// github.com/sourcegraph/sourcegraph/enterprise/dev/ci/images => ./enterprise/dev/ci/images
+// We publish 'lib' as a package for import in other tooling.
+// When developing Sourcegraph itself, this replace uses the local package instead of a pushed version.
+// github.com/sourcegraph/sourcegraph/lib => ./lib
 )
 
 // Temporary replace directives
@@ -452,4 +457,11 @@ replace (
 	github.com/russellhaering/gosaml2 => github.com/sourcegraph/gosaml2 v0.6.1-0.20210128133756-84151d087b10
 	github.com/russross/blackfriday => github.com/russross/blackfriday v1.5.2
 	golang.org/x/oauth2 => github.com/sourcegraph/oauth2 v0.0.0-20210825125341-77c1d99ece3c
+)
+
+replace (
+	cloud.google.com/go/storage => cloud.google.com/go/storage v1.23.1-0.20220720012920-0da97cafde21
+	github.com/ozankasikci/go-image-merge => github.com/sourcegraph/go-image-merge v0.2.3-0.20210226214948-f91742c8193e
+	github.com/sourcegraph/sourcegraph/enterprise/dev/ci/images => github.com/sourcegraph/sourcegraph/enterprise/dev/ci/images v0.0.0-20220721162402-a754c1a4b92c
+	github.com/sourcegraph/sourcegraph/lib => github.com/sourcegraph/sourcegraph/lib v0.0.0-20220721162402-a754c1a4b92c
 )

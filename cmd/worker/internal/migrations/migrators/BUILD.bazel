@@ -1,0 +1,50 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "migrators",
+    srcs = [
+        "external_accounts_migrator.go",
+        "extsvc_config_migrator.go",
+        "extsvc_webhook_migrator.go",
+        "register.go",
+    ],
+    importpath = "github.com/sourcegraph/sourcegraph/cmd/worker/internal/migrations/migrators",
+    visibility = ["//cmd/worker:__subpackages__"],
+    deps = [
+        "//internal/database",
+        "//internal/database/basestore",
+        "//internal/encryption/keyring",
+        "//internal/oobmigration",
+        "//internal/types",
+        "@com_github_keegancsmith_sqlf//:sqlf",
+        "@com_github_sourcegraph_log//:log",
+        "@com_github_sourcegraph_sourcegraph_lib//errors",
+    ],
+)
+
+go_test(
+    name = "migrators_test",
+    srcs = [
+        "external_accounts_migrator_test.go",
+        "extsvc_migrator_test.go",
+        "extsvc_webhook_migrator_test.go",
+        "helpers_test.go",
+    ],
+    embed = [":migrators"],
+    deps = [
+        "//internal/conf",
+        "//internal/database",
+        "//internal/database/basestore",
+        "//internal/database/dbtest",
+        "//internal/encryption",
+        "//internal/encryption/keyring",
+        "//internal/encryption/testing",
+        "//internal/extsvc",
+        "//internal/types",
+        "//internal/types/typestest",
+        "//schema",
+        "@com_github_keegancsmith_sqlf//:sqlf",
+        "@com_github_sourcegraph_log//logtest",
+        "@com_github_stretchr_testify//assert",
+    ],
+)

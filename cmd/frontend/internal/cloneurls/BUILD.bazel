@@ -1,0 +1,32 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "cloneurls",
+    srcs = ["clone_urls.go"],
+    importpath = "github.com/sourcegraph/sourcegraph/cmd/frontend/internal/cloneurls",
+    visibility = ["//cmd/frontend:__subpackages__"],
+    deps = [
+        "//cmd/frontend/envvar",
+        "//internal/api",
+        "//internal/conf/reposource",
+        "//internal/database",
+        "//internal/extsvc",
+        "//internal/trace/ot",
+        "//internal/types",
+        "//schema",
+        "@com_github_sourcegraph_sourcegraph_lib//errors",
+    ],
+)
+
+go_test(
+    name = "cloneurls_test",
+    srcs = ["clone_urls_test.go"],
+    embed = [":cloneurls"],
+    deps = [
+        "//internal/api",
+        "//internal/database",
+        "//internal/extsvc",
+        "//internal/types",
+        "@com_github_google_go_cmp//cmp",
+    ],
+)

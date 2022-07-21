@@ -1,0 +1,27 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "indexer",
+    srcs = [
+        "config.go",
+        "iface.go",
+        "indexer.go",
+        "init.go",
+    ],
+    importpath = "github.com/sourcegraph/sourcegraph/internal/codeintel/dependencies/background/indexer",
+    visibility = ["//:__subpackages__"],
+    deps = [
+        "//internal/api",
+        "//internal/codeintel/dependencies",
+        "//internal/codeintel/dependencies/live",
+        "//internal/codeintel/policies/enterprise",
+        "//internal/codeintel/stores/dbstore",
+        "//internal/codeintel/types",
+        "//internal/conf",
+        "//internal/database",
+        "//internal/env",
+        "//internal/goroutine",
+        "//internal/timeutil",
+        "@com_github_sourcegraph_sourcegraph_lib//errors",
+    ],
+)

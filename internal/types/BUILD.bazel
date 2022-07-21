@@ -1,0 +1,41 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "types",
+    srcs = [
+        "bitbucket_permissions.go",
+        "codeintel.go",
+        "cursor.go",
+        "executors.go",
+        "external_services.go",
+        "saved_searches.go",
+        "secret.go",
+        "types.go",
+        "webhook_logs.go",
+    ],
+    importpath = "github.com/sourcegraph/sourcegraph/internal/types",
+    visibility = ["//:__subpackages__"],
+    deps = [
+        "//internal/api",
+        "//internal/extsvc",
+        "//internal/jsonc",
+        "//internal/workerutil",
+        "//schema",
+        "@com_github_sourcegraph_jsonx//:jsonx",
+        "@com_github_sourcegraph_sourcegraph_lib//errors",
+    ],
+)
+
+go_test(
+    name = "types_test",
+    srcs = [
+        "secret_test.go",
+        "types_test.go",
+    ],
+    embed = [":types"],
+    deps = [
+        "//internal/extsvc",
+        "//schema",
+        "@com_github_stretchr_testify//assert",
+    ],
+)

@@ -1,0 +1,20 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_binary", "go_library")
+
+go_library(
+    name = "monitoring_lib",
+    srcs = ["main.go"],
+    importpath = "github.com/sourcegraph/sourcegraph/monitoring",
+    visibility = ["//visibility:private"],
+    deps = [
+        "//internal/logging",
+        "//monitoring/definitions",
+        "//monitoring/monitoring",
+        "@com_github_inconshreveable_log15//:log15",
+    ],
+)
+
+go_binary(
+    name = "monitoring",
+    embed = [":monitoring_lib"],
+    visibility = ["//visibility:public"],
+)

@@ -1,0 +1,23 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "resolver",
+    srcs = [
+        "config.go",
+        "iface.go",
+        "init.go",
+        "resolver.go",
+    ],
+    importpath = "github.com/sourcegraph/sourcegraph/internal/codeintel/dependencies/background/resolver",
+    visibility = ["//:__subpackages__"],
+    deps = [
+        "//internal/api",
+        "//internal/codeintel/dependencies",
+        "//internal/codeintel/dependencies/live",
+        "//internal/database",
+        "//internal/env",
+        "//internal/gitserver/gitdomain",
+        "//internal/goroutine",
+        "@com_github_sourcegraph_sourcegraph_lib//errors",
+    ],
+)

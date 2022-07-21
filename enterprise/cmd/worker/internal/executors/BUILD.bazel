@@ -1,0 +1,20 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "executors",
+    srcs = [
+        "janitor_config.go",
+        "janitor_job.go",
+    ],
+    importpath = "github.com/sourcegraph/sourcegraph/enterprise/cmd/worker/internal/executors",
+    visibility = ["//enterprise/cmd/worker:__subpackages__"],
+    deps = [
+        "//cmd/worker/job",
+        "//cmd/worker/shared/init/db",
+        "//internal/database",
+        "//internal/env",
+        "//internal/goroutine",
+        "//internal/services/executors",
+        "@com_github_sourcegraph_log//:log",
+    ],
+)

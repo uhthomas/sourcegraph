@@ -1,0 +1,42 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "migration",
+    srcs = [
+        "add.go",
+        "leaves.go",
+        "revert.go",
+        "squash.go",
+        "util.go",
+        "visualize.go",
+    ],
+    importpath = "github.com/sourcegraph/sourcegraph/dev/sg/internal/migration",
+    visibility = ["//dev/sg:__subpackages__"],
+    deps = [
+        "//dev/sg/internal/db",
+        "//dev/sg/internal/run",
+        "//dev/sg/internal/std",
+        "//dev/sg/root",
+        "//internal/database/connections/live",
+        "//internal/database/migration/definition",
+        "//internal/database/migration/runner",
+        "//internal/database/migration/store",
+        "//internal/lazyregexp",
+        "//internal/observation",
+        "@com_github_grafana_regexp//:regexp",
+        "@com_github_sourcegraph_log//:log",
+        "@com_github_sourcegraph_sourcegraph_lib//errors",
+        "@com_github_sourcegraph_sourcegraph_lib//output",
+        "@in_gopkg_yaml_v2//:yaml_v2",
+    ],
+)
+
+go_test(
+    name = "migration_test",
+    srcs = ["util_test.go"],
+    embed = [":migration"],
+    deps = [
+        "@com_github_hexops_autogold//:autogold",
+        "@com_github_stretchr_testify//require",
+    ],
+)

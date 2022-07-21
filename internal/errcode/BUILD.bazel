@@ -1,0 +1,26 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "errcode",
+    srcs = [
+        "code.go",
+        "presentation_error.go",
+    ],
+    importpath = "github.com/sourcegraph/sourcegraph/internal/errcode",
+    visibility = ["//:__subpackages__"],
+    deps = [
+        "//internal/gitserver/gitdomain",
+        "@com_github_gorilla_schema//:schema",
+        "@com_github_sourcegraph_sourcegraph_lib//errors",
+    ],
+)
+
+go_test(
+    name = "errcode_test",
+    srcs = [
+        "code_test.go",
+        "presentation_error_test.go",
+    ],
+    embed = [":errcode"],
+    deps = ["@com_github_sourcegraph_sourcegraph_lib//errors"],
+)
