@@ -221,7 +221,7 @@ func (s *Server) cleanupRepos(gitServerAddrs []string) {
 			wrongShardRepoSize += size
 			if isKnownGitServerShard && wrongShardReposDeleteLimit > 0 && wrongShardReposDeleted < int64(wrongShardReposDeleteLimit) {
 				s.Logger.Info("removing repo cloned on the wrong shard", log.String("dir", string(dir)), log.String("target-shard", addr), log.String("current-shard", s.Hostname), log.Int64("size-bytes", size))
-				if err := s.removeRepoDirectory(dir); err != nil {
+				if err := s.removeRepoDirectory(dir, false); err != nil {
 					return false, err
 				}
 				wrongShardReposDeleted++
@@ -256,7 +256,7 @@ func (s *Server) cleanupRepos(gitServerAddrs []string) {
 		}
 
 		s.Logger.Info("removing corrupt repo", log.String("repo", string(dir)), log.String("reason", reason))
-		if err := s.removeRepoDirectory(dir); err != nil {
+		if err := s.removeRepoDirectory(dir, true); err != nil {
 			return true, err
 		}
 		reposRemoved.WithLabelValues(reason).Inc()
@@ -687,7 +687,7 @@ func (s *Server) freeUpSpace(howManyBytesToFree int64) error {
 			return nil
 		}
 		delta := dirSize(d.Path("."))
-		if err := s.removeRepoDirectory(d); err != nil {
+		if err := s.removeRepoDirectory(d, true); err != nil {
 			return errors.Wrap(err, "removing repo directory")
 		}
 		spaceFreed += delta
@@ -768,7 +768,7 @@ func dirSize(d string) int64 {
 // the directory.
 //
 // Additionally, it removes parent empty directories up until s.ReposDir.
-func (s *Server) removeRepoDirectory(gitDir GitDir) error {
+func (s *Server) removeRepoDirectory(gitDir GitDir, updateCloneStatus bool) error {
 	ctx := context.Background()
 	dir := string(gitDir)
 
@@ -791,8 +791,10 @@ func (s *Server) removeRepoDirectory(gitDir GitDir) error {
 	// Everything after this point is just cleanup, so any error that occurs
 	// should not be returned, just logged.
 
-	// Set as not_cloned in the database
-	s.setCloneStatusNonFatal(ctx, s.name(gitDir), types.CloneStatusNotCloned)
+	// Set as not_cloned in the database.
+	if updateCloneStatus {
+		s.setCloneStatusNonFatal(ctx, s.name(gitDir), types.CloneStatusNotCloned)
+	}
 
 	// Cleanup empty parent directories. We just attempt to remove and if we
 	// have a failure we assume it's due to the directory having other
