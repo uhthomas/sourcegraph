@@ -1,3 +1,4 @@
+load("@io_bazel_rules_docker//go:image.bzl", "go_image")
 load("@io_bazel_rules_go//go:def.bzl", "go_binary", "go_library", "go_test")
 
 go_library(
@@ -126,4 +127,10 @@ go_test(
         "@com_github_stretchr_testify//assert",
         "@com_github_urfave_cli_v2//:cli",
     ],
+)
+
+go_image(
+    name = "image",
+    embed = [":sg_lib"],
+    visibility = ["//visibility:public"],
 )

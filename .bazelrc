@@ -3,6 +3,8 @@ common --repo_env=BAZEL_USE_CPP_ONLY_TOOLCHAIN=1
 
 common --experimental_guard_against_concurrent_changes
 
+build --incompatible_enable_cc_toolchain_resolution
+
 # Cache optimisations.
 build --experimental_action_cache_store_output_metadata
 build --experimental_remote_cache_async
@@ -42,3 +44,7 @@ test --incompatible_exclusive_test_sandboxed
 
 build --experimental_repository_cache_urls_as_default_canonical_id
 fetch --experimental_repository_cache_urls_as_default_canonical_id
+
+# Zig requires PIE builds when cross compiling.
+# https://github.com/golang/go/issues/44695
+build --@io_bazel_rules_go//go/config:linkmode=pie

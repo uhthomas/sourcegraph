@@ -5275,8 +5275,9 @@ def go_repositories():
         name = "com_github_smacker_go_tree_sitter",
         build_file_proto_mode = "disable",
         importpath = "github.com/smacker/go-tree-sitter",
-        sum = "h1:WrsSqod9T70HFyq8hjL6wambOKb4ISUXzFUuNTJHDwo=",
-        version = "v0.0.0-20220209044044-0d3022e933c3",
+        replace = "github.com/smacker/go-tree-sitter",
+        sum = "h1:l4ch+twh4vEZ5VDPyiqC/6h8BhGWHiDxdFRN4M/ZAck=",
+        version = "v0.0.0-20220628134258-ac06e95cfa11",
     )
     go_repository(
         name = "com_github_smartystreets_assertions",
@@ -5509,15 +5510,15 @@ def go_repositories():
         name = "com_github_stretchr_objx",
         build_file_proto_mode = "disable",
         importpath = "github.com/stretchr/objx",
-        sum = "h1:NGXK3lHquSN08v5vWalVI/L8XU9hdzE/G6xsrze47As=",
-        version = "v0.3.0",
+        sum = "h1:M2gUjqZET1qApGOWNSnZ49BAIMX4F/1plDv3+l31EJ4=",
+        version = "v0.4.0",
     )
     go_repository(
         name = "com_github_stretchr_testify",
         build_file_proto_mode = "disable",
         importpath = "github.com/stretchr/testify",
-        sum = "h1:4jaiDzPyXQvSd7D0EjG45355tLlV3VOECpq10pLC+8s=",
-        version = "v1.7.2",
+        sum = "h1:wZRexSlwd7ZXfKINDLsO4r7WBt3gTKONc6K/VesHvHM=",
+        version = "v1.7.4",
     )
     go_repository(
         name = "com_github_stripe_stripe_go",

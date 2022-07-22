@@ -152,7 +152,7 @@ require (
 	github.com/sourcegraph/scip v0.1.0
 	github.com/sourcegraph/sourcegraph/enterprise/dev/ci/images v0.0.0-20220203145655-4d2a39d3038a
 	github.com/sourcegraph/sourcegraph/lib v0.0.0-20220721165634-9a0f825568e6
-	github.com/stretchr/testify v1.7.2
+	github.com/stretchr/testify v1.7.4
 	github.com/stripe/stripe-go v70.15.0+incompatible
 	github.com/stvp/tempredis v0.0.0-20181119212430-b82af8480203
 	github.com/temoto/robotstxt v1.1.2
@@ -380,7 +380,6 @@ require (
 	github.com/spaolacci/murmur3 v1.1.0 // indirect
 	github.com/spf13/cobra v1.4.0 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
-	github.com/stretchr/objx v0.3.0 // indirect
 	github.com/tadvi/systray v0.0.0-20190226123456-11a2b8fa57af // indirect
 	github.com/tidwall/match v1.1.1 // indirect
 	github.com/tidwall/pretty v1.2.0 // indirect
@@ -462,6 +461,7 @@ replace (
 replace (
 	cloud.google.com/go/storage => cloud.google.com/go/storage v1.23.1-0.20220720012920-0da97cafde21
 	github.com/ozankasikci/go-image-merge => github.com/sourcegraph/go-image-merge v0.2.3-0.20210226214948-f91742c8193e
+	github.com/smacker/go-tree-sitter => github.com/smacker/go-tree-sitter v0.0.0-20220628134258-ac06e95cfa11
 	github.com/sourcegraph/sourcegraph/enterprise/dev/ci/images => github.com/sourcegraph/sourcegraph/enterprise/dev/ci/images v0.0.0-20220721162402-a754c1a4b92c
 	github.com/sourcegraph/sourcegraph/lib => github.com/sourcegraph/sourcegraph/lib v0.0.0-20220721162402-a754c1a4b92c
 )

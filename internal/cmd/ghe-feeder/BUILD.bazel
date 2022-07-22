@@ -1,3 +1,4 @@
+load("@io_bazel_rules_docker//go:image.bzl", "go_image")
 load("@io_bazel_rules_go//go:def.bzl", "go_binary", "go_library")
 
 go_library(
@@ -31,4 +32,10 @@ go_binary(
     name = "ghe-feeder",
     embed = [":ghe-feeder_lib"],
     visibility = ["//:__subpackages__"],
+)
+
+go_image(
+    name = "image",
+    embed = [":ghe-feeder_lib"],
+    visibility = ["//visibility:public"],
 )

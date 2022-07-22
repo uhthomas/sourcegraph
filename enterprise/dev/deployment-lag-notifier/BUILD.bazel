@@ -1,3 +1,4 @@
+load("@io_bazel_rules_docker//go:image.bzl", "go_image")
 load("@io_bazel_rules_go//go:def.bzl", "go_binary", "go_library", "go_test")
 
 go_library(
@@ -25,4 +26,10 @@ go_test(
     name = "deployment-lag-notifier_test",
     srcs = ["main_test.go"],
     embed = [":deployment-lag-notifier_lib"],
+)
+
+go_image(
+    name = "image",
+    embed = [":deployment-lag-notifier_lib"],
+    visibility = ["//visibility:public"],
 )

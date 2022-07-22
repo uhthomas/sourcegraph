@@ -1,3 +1,4 @@
+load("@io_bazel_rules_docker//go:image.bzl", "go_image")
 load("@io_bazel_rules_go//go:def.bzl", "go_binary", "go_library", "go_test")
 
 go_library(
@@ -30,4 +31,10 @@ go_test(
         "@com_github_go_git_go_git_v5//plumbing/object",
         "@com_github_google_go_cmp//cmp",
     ],
+)
+
+go_image(
+    name = "image",
+    embed = [":git-combine_lib"],
+    visibility = ["//visibility:public"],
 )
