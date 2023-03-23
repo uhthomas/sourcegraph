@@ -81,7 +81,7 @@ importers:
       '@sourcegraph/eslint-plugin-sourcegraph': ^1.0.5
       '@sourcegraph/eslint-plugin-wildcard': workspace:*
       '@sourcegraph/extension-api-classes': ^1.1.0
-      '@sourcegraph/extension-api-stubs': ^1.6.1
+      '@sourcegraph/extension-api-stubs': ^1.6.2
       '@sourcegraph/extension-api-types': workspace:*
       '@sourcegraph/prettierrc': ^3.0.3
       '@sourcegraph/stylelint-config': ^1.4.0
@@ -582,7 +582,7 @@ importers:
       '@sourcegraph/eslint-config': 0.32.0_4htfruiy2bgjslzgmagy6rfrsq
       '@sourcegraph/eslint-plugin-sourcegraph': 1.0.5_el7ggvuufxftzwvu6wsrutnxdi
       '@sourcegraph/eslint-plugin-wildcard': link:client/eslint-plugin-wildcard
-      '@sourcegraph/extension-api-stubs': 1.6.1
+      '@sourcegraph/extension-api-stubs': 1.6.2
       '@sourcegraph/prettierrc': 3.0.3
       '@sourcegraph/stylelint-config': 1.4.0_7st3jml4hcu4j5zt4zxvlqp4du
       '@sourcegraph/stylelint-plugin-sourcegraph': 1.0.1_stylelint@14.3.0
@@ -7430,8 +7430,8 @@ packages:
       sourcegraph: 25.7.0_graphql@15.4.0
     dev: true
 
-  /@sourcegraph/extension-api-stubs/1.6.1:
-    resolution: {integrity: sha512-ItiKTCU87MrEkQAphd6gDT1Geyhg8tXvWMBrkQuYGhH7ggOLWKWHbD+rR1S3vBco1EZeeaXXVxk4d97h85qqHA==}
+  /@sourcegraph/extension-api-stubs/1.6.2:
+    resolution: {integrity: sha512-7uy03qVTDWAH0D663DY3FIRxjG5JV2tSRxJljMeUzRb/ZBZrKB9Htw6naYcWqwk0t4ye8MiPOm74avCpqNvcmw==}
     dependencies:
       '@sourcegraph/extension-api-classes': 1.1.0_sourcegraph@25.7.0
       '@types/sinon': 10.0.4
