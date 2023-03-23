@@ -77,7 +77,7 @@ importers:
       '@sentry/cli': ^1.74.4
       '@sentry/webpack-plugin': ^1.20.0
       '@slack/web-api': ^5.15.0
-      '@sourcegraph/eslint-config': 0.32.0
+      '@sourcegraph/eslint-config': 0.33.0
       '@sourcegraph/eslint-plugin-sourcegraph': ^1.0.5
       '@sourcegraph/eslint-plugin-wildcard': workspace:*
       '@sourcegraph/extension-api-classes': ^1.1.0
@@ -579,7 +579,7 @@ importers:
       '@sentry/cli': 1.74.6
       '@sentry/webpack-plugin': 1.20.0
       '@slack/web-api': 5.15.0
-      '@sourcegraph/eslint-config': 0.32.0_4htfruiy2bgjslzgmagy6rfrsq
+      '@sourcegraph/eslint-config': 0.33.0_4htfruiy2bgjslzgmagy6rfrsq
       '@sourcegraph/eslint-plugin-sourcegraph': 1.0.5_el7ggvuufxftzwvu6wsrutnxdi
       '@sourcegraph/eslint-plugin-wildcard': link:client/eslint-plugin-wildcard
       '@sourcegraph/extension-api-stubs': 1.6.1
@@ -7361,8 +7361,8 @@ packages:
       '@sourcegraph/codemod-toolkit-ts': 1.0.1
     dev: true
 
-  /@sourcegraph/eslint-config/0.32.0_4htfruiy2bgjslzgmagy6rfrsq:
-    resolution: {integrity: sha512-vy9tewUjx7w+4WpQ+vVADYypBI9/yXjYy3BJ23e3XbXPOEJBL6Upt8s6tphDSVGfeRUUnYv/1BnG5nlH68XPSw==}
+  /@sourcegraph/eslint-config/0.33.0_4htfruiy2bgjslzgmagy6rfrsq:
+    resolution: {integrity: sha512-MoTXZ9oR+mHdjdTpkzJ/wRqFt75NnvodNiuCcvJHRCruiDCRn0yCPxC6d9pDj6A7KdLZA8ZpUqFOtb9Aenc6BA==}
     dependencies:
       '@sourcegraph/prettierrc': 3.0.3
       '@typescript-eslint/eslint-plugin': 5.24.0_el7ggvuufxftzwvu6wsrutnxdi
