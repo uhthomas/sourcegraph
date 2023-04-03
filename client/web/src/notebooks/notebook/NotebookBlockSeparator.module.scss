@@ -1,0 +1,14 @@
+.block-separator {
+    position: relative;
+    display: flex;
+    justify-content: right;
+    padding: 0 1rem;
+
+    > * {
+        visibility: hidden;
+    }
+
+    &:hover > * {
+        visibility: visible;
+    }
+}
